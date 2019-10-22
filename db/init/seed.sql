@@ -48,18 +48,18 @@ CREATE TABLE User_connections (
 );
 
 CREATE TABLE Family_tasks (
-    id SERIAL PRIMARY KEY
-  , family_id INT
-  , task_id INT
+    id SERIAL  PRIMARY KEY
+  , family_id  INT
+  , task_id    INT
   , start_time DATETIME
-  , end_time DATETIME
-  , duration TIME
-  , reward SMALLINT
+  , end_time   DATETIME
+  , duration   TIME
+  , reward     SMALLINT
 );
 
 CREATE TABLE Family_rewards (
     id SERIAL PRIMARY KEY
   , family_id INT
   , reward_id INT
-  , cost SMALLINT
+  , cost      SMALLINT
 );
