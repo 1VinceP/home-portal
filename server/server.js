@@ -37,18 +37,6 @@ massive( process.env.DATABASE_URI ).then(db => {
 // Authentication
 app.post( '/auth/family/create', authController.createFamily );
 app.post( '/auth/family/login', authController.loginFamily );
-app.get('/session',
-  ( req, res, next ) => {
-    let n = req.session.views || 0;
-    req.session.views = ++n;
-    next();
-  },
-  ( req, res ) => res.send( req.session ),
-);
-app.get('/logout', ( req, res ) => {
-  req.session = null;
-  res.send('Logout successful');
-});
 
 
 
