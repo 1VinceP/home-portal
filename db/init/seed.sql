@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Family;
+DROP TABLE IF EXISTS Families;
 DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Rewards;
 DROP TABLE IF EXISTS Tasks;
@@ -6,17 +6,20 @@ DROP TABLE IF EXISTS User_connections;
 DROP TABLE IF EXISTS Family_tasks;
 DROP TABLE IF EXISTS Family_rewards;
 
-CREATE TABLE Family (
-    id SERIAL PRIMARY KEY
-  , "name" TEXT
+CREATE TABLE Families (
+    id SERIAL  PRIMARY KEY
+  , "name"     TEXT
+  , email      TEXT
+  , "password" TEXT
 );
 
 CREATE TABLE Users (
-    id SERIAL PRIMARY KEY
-  , username  TEXT
-  , "admin"   BOOLEAN
-  , manager   BOOLEAN,
-  , family_id INT -- FOREIGN KEY to Family
+    id SERIAL  PRIMARY KEY
+  , username   TEXT
+  , "password" TEXT
+  , "admin"    BOOLEAN
+  , manager    BOOLEAN
+  , family_id  INT -- FOREIGN KEY to Family
 );
 INSERT INTO Users ( username, "admin", manager ) VALUES ( 'Demo Admin', true, true );
 INSERT INTO Users ( username, "admin", manager ) VALUES ( 'Demo Manager', false, true );
@@ -38,7 +41,7 @@ CREATE TABLE Tasks (
   , "image"       TEXT
   , "description" TEXT
   , reward        SMALLINT
-)
+);
 
 CREATE TABLE User_connections (
     id SERIAL PRIMARY KEY
@@ -51,8 +54,8 @@ CREATE TABLE Family_tasks (
     id SERIAL  PRIMARY KEY
   , family_id  INT
   , task_id    INT
-  , start_time DATETIME
-  , end_time   DATETIME
+  , start_time TIMESTAMP
+  , end_time   TIMESTAMP
   , duration   TIME
   , reward     SMALLINT
 );

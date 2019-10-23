@@ -5,7 +5,7 @@ import RewardIcon from 'vue-material-design-icons/Seal.vue';
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue';
 
 export default {
-  name: 'nav',
+  name: 'base-nav',
   components: {
     HouseIcon, ListIcon, RewardIcon, CalendarIcon,
   },

@@ -17,11 +17,25 @@ export default new Vuex.Store({
   plugins: [VuexORM.install( database )],
 
   state: {
+    family: { id: null },
+    user: { id: null },
   },
+
+  getters: {
+    isAuthenticated: state => (!!state.user.id && state.user.id >= 0)
+      && (!!state.family.id && state.family.id >= 0),
+    isFamily: state => (!!state.family.id && state.family.id >= 0),
+  },
+
   mutations: {
+    setNewFamily: ( state, family ) => {
+      state.family = family;
+    },
   },
+
   actions: {
   },
+
   modules: {
   },
 });

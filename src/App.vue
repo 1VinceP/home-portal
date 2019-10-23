@@ -1,22 +1,29 @@
 <script>
-import Nav from './components/Nav.vue';
-import Header from './components/Header.vue';
+import { mapGetters } from 'vuex';
+import BaseNav from './components/Nav.vue';
+import BaseHeader from './components/Header.vue';
 
 export default {
   data: () => ({
     search: '',
   }),
 
-  components: { Nav, Header },
+  computed: {
+    ...mapGetters(['isFamily']),
+  },
+
+  components: { BaseNav, BaseHeader },
 };
 </script>
 
 <template>
   <div id="app">
-    <Nav />
-    <div class="page">
-      <Header />
-      <router-view/>
+    <div class="app-container">
+      <BaseNav v-if="isFamily" />
+      <div :class="['page', { 'auth-padding': isFamily }]">
+        <BaseHeader v-if="isFamily" />
+        <router-view />
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +43,7 @@ export default {
   --shadow: 0 0 6px 1px var(--grey);
 }
 
+/* styles */
 #app {
   display: flex;
   -webkit-font-smoothing: antialiased;
@@ -44,10 +52,16 @@ export default {
   & * { font-family: 'Open Sans', sans-serif; }
 }
 
+.app-container {
+  width: 100%;
+}
+
 .page {
   min-height: 100vh;
   width: 100%;
   padding: 16px;
-  padding-left: calc(var(--navSize) + 16px);
+  &.auth-padding {
+    padding-left: calc(var(--navSize) + 16px);
+  }
 }
 </style>

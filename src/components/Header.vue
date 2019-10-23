@@ -1,19 +1,19 @@
 <script>
-import Search from './BaseSearch.vue';
+import Input from './BaseInput.vue';
 
 export default {
-  name: 'header',
+  name: 'base-header',
   data: () => ({
     search: '',
   }),
-  components: { Search },
+  components: { Input },
 };
 </script>
 
 <template>
   <header>
     <div class="title">Dashboard</div>
-    <Search :value="search" />
+    <Input v-model="search" :isSearch="true" />
   </header>
 </template>
 

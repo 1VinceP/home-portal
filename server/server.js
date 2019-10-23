@@ -2,13 +2,28 @@ require('dotenv').config();
 
 const express = require('express')
     , bodyParser = require('body-parser')
+    , session = require('cookie-session')
     , massive = require('massive')
+    , helmet = require('helmet')
     , chalk = require('chalk');
 
-let app = express();
-app.use( bodyParser.json() );
+const authController = require('./controllers/authController');
 
-// database connection
+let app = express();
+app.use(session({
+  name: 'session',
+  keys: [process.env.SESSION_KEY_1, process.env.SESSION_KEY_2],
+  secret: process.env.SESSION_SECRET,
+  cookie: {
+    secure: true,
+    httpOnly: true,
+    expires: new Date(Date.now() + 60 * 60 * 1000) // 1 hour
+  },
+}));
+app.use( bodyParser.json() );
+app.use( helmet() );
+
+/* database connection */
 massive( process.env.DATABASE_URI ).then(db => {
   console.log( chalk.magenta( 'Connected to Database' ) );
   app.set( 'db', db );
@@ -18,8 +33,22 @@ massive( process.env.DATABASE_URI ).then(db => {
   listen();
 });
 
-
-
+/* REST routes */
+// Authentication
+app.post( '/auth/family/create', authController.createFamily );
+app.post( '/auth/family/login', authController.loginFamily );
+app.get('/session',
+  ( req, res, next ) => {
+    let n = req.session.views || 0;
+    req.session.views = ++n;
+    next();
+  },
+  ( req, res ) => res.send( req.session ),
+);
+app.get('/logout', ( req, res ) => {
+  req.session = null;
+  res.send('Logout successful');
+});
 
 
 
