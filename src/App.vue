@@ -1,30 +1,21 @@
 <script>
-import HouseIcon from 'vue-material-design-icons/Home.vue';
-import MenuIcon from 'vue-material-design-icons/Menu.vue';
+import Nav from './components/Nav.vue';
+import Header from './components/Header.vue';
 
 export default {
   data: () => ({
-    navOpen: false,
+    search: '',
   }),
 
-  methods: {
-    handleNav() {
-      this.navOpen = !this.navOpen;
-    },
-  },
-
-  components: { HouseIcon, MenuIcon },
+  components: { Nav, Header },
 };
 </script>
 
 <template>
   <div id="app">
-    <div :class="['nav', { 'nav-large': navOpen }]">
-      <router-link to="/"><HouseIcon /></router-link>
-      <!-- <button @click="handleNav()">{{ navOpen ? 'Close' : 'Open' }}</button> -->
-      <MenuIcon class="menu" @click="handleNav()" />
-    </div>
+    <Nav />
     <div class="page">
+      <Header />
       <router-view/>
     </div>
   </div>
@@ -50,33 +41,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   & * { font-family: 'Open Sans', sans-serif; }
-}
-
-.nav {
-  height: 100vh;
-  width: var(--navSize);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px 0;
-  position: fixed;
-  box-shadow: var(--shadow);
-  transition: all .2s ease-in-out;
-  &.nav-large {
-    width: 300px;
-  }
-  & a {
-    font-weight: bold;
-    color: #2c3e50;
-  }
-  & a.router-link-exact-active {
-    color: var(--blue);
-  }
-  & .menu {
-    cursor: pointer;
-  }
 }
 
 .page {
