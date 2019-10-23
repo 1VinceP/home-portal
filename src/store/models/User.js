@@ -9,6 +9,8 @@ export default class User extends Model {
       username: this.attr(''),
       email: this.attr(''),
       points: this.attr(0),
+      admin: this.attr(false),
+      manager: this.attr(false),
     };
   }
 }
