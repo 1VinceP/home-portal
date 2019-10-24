@@ -9,7 +9,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(['isFamily']),
+    ...mapGetters(['isFamily', 'isAuthenticated']),
   },
 
   components: { BaseNav, BaseHeader },
@@ -18,9 +18,9 @@ export default {
 
 <template>
   <div id="app">
-    <BaseNav v-if="isFamily" />
-    <div :class="['page', { 'auth-padding': isFamily }]">
-      <BaseHeader v-if="isFamily" />
+    <BaseNav v-if="isFamily || isAuthenticated" />
+    <div :class="['page', { 'auth-padding': isFamily || isAuthenticated }]">
+      <BaseHeader v-if="isFamily || isAuthenticated" />
       <router-view />
     </div>
   </div>

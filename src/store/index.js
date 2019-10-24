@@ -17,8 +17,8 @@ export default new Vuex.Store({
   plugins: [VuexORM.install( database )],
 
   state: {
-    family: { id: 2 },
-    user: { id: 2 },
+    family: { id: null },
+    user: { id: null },
   },
 
   getters: {
@@ -30,6 +30,10 @@ export default new Vuex.Store({
   mutations: {
     setNewFamily: ( state, family ) => {
       state.family = family;
+    },
+    setFamily: ( state, family ) => {
+      state.family = family;
+      state.user = family.users[0];
     },
   },
 

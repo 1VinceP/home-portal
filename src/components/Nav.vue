@@ -23,7 +23,7 @@ export default {
     <router-link to="/tasks" class="icon-container">
       <ListIcon :size="34" />
     </router-link>
-    <router-link to="/store" class="icon-container">
+    <router-link to="/rewards" class="icon-container">
       <RewardIcon :size="34" />
     </router-link>
   </div>

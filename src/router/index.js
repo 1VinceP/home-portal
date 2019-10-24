@@ -40,6 +40,21 @@ const routes = [
     component: Family,
     meta: { protection: 'basic' },
   },
+  {
+    path: '/calendar',
+    name: 'calendar',
+    meta: { protection: 'full' },
+  },
+  {
+    path: '/tasks',
+    name: 'tasks',
+    meta: { protection: 'full' },
+  },
+  {
+    path: '/rewards',
+    name: 'rewards',
+    meta: { protection: 'full' },
+  },
 ];
 
 const router = new VueRouter({

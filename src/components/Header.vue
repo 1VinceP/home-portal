@@ -1,4 +1,5 @@
 <script>
+import startCase from 'lodash/startCase';
 import Input from './BaseInput.vue';
 
 export default {
@@ -8,7 +9,7 @@ export default {
   }),
 
   computed: {
-    title() { return this.$route.name; },
+    title() { return startCase(this.$route.name); },
   },
 
   components: { Input },

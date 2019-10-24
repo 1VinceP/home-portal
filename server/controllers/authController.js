@@ -1,10 +1,26 @@
 const bcrypt = require('bcrypt');
 const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS);
 
+const offlineFamily = [{
+  name: 'Offline Family',
+  email: 'offline@email.com',
+  id: 12,
+  users: [
+    { name: 'dad', id: 0, tasks: [], admin: true, manager: true },
+    { name: 'mom', id: 1, tasks: [], admin: false, manager: true },
+    { name: 'son', id: 2, tasks: [], admin: false, manager: false },
+  ],
+}];
+
 module.exports = {
 
   createFamily: async ( req, res ) => {
     const { name, email, password } = req.body;
+
+    if (!req.app.useDB) {
+      res.status(200).send(offlineFamily);
+      return;
+    }
 
     const hash = await bcrypt.hash( password, saltRounds );
     const response = await req.app.get('db').auth.createFamily({ name, email, password: hash });
@@ -14,6 +30,11 @@ module.exports = {
 
   loginFamily: async ( req, res ) => {
     const { email, password } = req.body;
+
+    if (!req.app.useDB) {
+      res.status(200).send(offlineFamily);
+      return;
+    }
 
     const family = await req.app.get('db').auth.loginFamily({ email });
 

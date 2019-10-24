@@ -10,6 +10,8 @@ const express = require('express')
 const authController = require('./controllers/authController');
 
 let app = express();
+
+/* middleware */
 app.use(session({
   name: 'session',
   keys: [process.env.SESSION_KEY_1, process.env.SESSION_KEY_2],
@@ -26,10 +28,14 @@ app.use( helmet() );
 /* database connection */
 massive( process.env.DATABASE_URI ).then(db => {
   console.log( chalk.magenta( 'Connected to Database' ) );
+  app.set( 'useDB', true );
   app.set( 'db', db );
   app.get( 'db' ).init.seed()
     .then( res => console.log( res ) )
     .catch( res => console.log( res ) );
+  listen();
+}).catch(error => {
+  console.log( chalk.red( 'Could not connect to Database' ) );
   listen();
 });
 
