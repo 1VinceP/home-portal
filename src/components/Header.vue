@@ -6,13 +6,18 @@ export default {
   data: () => ({
     search: '',
   }),
+
+  computed: {
+    title() { return this.$route.name; },
+  },
+
   components: { Input },
 };
 </script>
 
 <template>
   <header>
-    <div class="title">Dashboard</div>
+    <div class="title">{{ title }}</div>
     <Input v-model="search" :isSearch="true" />
   </header>
 </template>

@@ -17,8 +17,8 @@ export default new Vuex.Store({
   plugins: [VuexORM.install( database )],
 
   state: {
-    family: { id: null },
-    user: { id: null },
+    family: { id: 2 },
+    user: { id: 2 },
   },
 
   getters: {

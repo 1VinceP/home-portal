@@ -18,12 +18,10 @@ export default {
 
 <template>
   <div id="app">
-    <div class="app-container">
-      <BaseNav v-if="isFamily" />
-      <div :class="['page', { 'auth-padding': isFamily }]">
-        <BaseHeader v-if="isFamily" />
-        <router-view />
-      </div>
+    <BaseNav v-if="isFamily" />
+    <div :class="['page', { 'auth-padding': isFamily }]">
+      <BaseHeader v-if="isFamily" />
+      <router-view />
     </div>
   </div>
 </template>
@@ -45,6 +43,8 @@ export default {
 
 /* styles */
 #app {
+  height: 100vh;
+  width: 100%;
   display: flex;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
