@@ -1,21 +1,14 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import VuexORM from '@vuex-orm/core';
-import VuexORMGraphQL from '@vuex-orm/plugin-graphql';
-import User from './models/User';
-import Reward from './models/Reward';
+
+import users from './modules/users';
+import tasks from './modules/tasks';
+import rewards from './modules/rewards';
+import calendar from './modules/calendar';
 
 Vue.use( Vuex );
 
-const database = new VuexORM.Database();
-database.register( User );
-database.register( Reward );
-
-VuexORM.use( VuexORMGraphQL, { database } );
-
 export default new Vuex.Store({
-  plugins: [VuexORM.install( database )],
-
   state: {
     family: { id: null },
     user: { id: null },
@@ -28,12 +21,11 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    setNewFamily: ( state, family ) => {
-      state.family = family;
-    },
     setFamily: ( state, family ) => {
       state.family = family;
-      state.user = family.users[0];
+      // if (family.users.length > 0) {
+      //   state.user = family.users[0];
+      // }
     },
   },
 
@@ -41,5 +33,9 @@ export default new Vuex.Store({
   },
 
   modules: {
+    calendar,
+    users,
+    tasks,
+    rewards,
   },
 });

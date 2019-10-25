@@ -25,7 +25,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setNewFamily', 'setFamily']),
+    ...mapMutations(['setFamily']),
 
     async createFamily() {
       const { email, password } = this;
@@ -39,7 +39,7 @@ export default {
         this.apiError = 'There was a problem';
       } else {
         const family = await res.json();
-        this.setNewFamily( family[0] );
+        this.setFamily( family );
         this.$router.push( '/family' );
       }
     },
@@ -56,13 +56,13 @@ export default {
         this.apiError = 'There was a problem loggin you in';
       } else {
         const family = await res.json();
-        this.setFamily( family[0] );
+        this.setFamily( family );
         this.$router.push( '/dashboard' );
       }
     },
 
-    switchMode() {
-      this.loginOrCreate = this.loginOrCreate === 'login' ? 'create' : 'login';
+    switchMode(mode) {
+      this.loginOrCreate = mode;
     },
   },
 
@@ -83,20 +83,38 @@ export default {
 
 <template>
   <div class="login">
-    <div v-if="loginOrCreate === 'login'" class="card">
-      <Input :placeholder="'Email'" v-model="email" />
-      <Input :placeholder="'Password'" v-model="password" :isPassword="true" />
-      <button :disabled="!canLogin" @click="loginFamily()">Login to your Family Account</button>
+
+    <div class="card">
+      <header>Title</header>
+      <div v-if="loginOrCreate === 'login'" class="inputs">
+        <Input :placeholder="'Email'" v-model="email" />
+        <Input :placeholder="'Password'" v-model="password" :isPassword="true" />
+        <button :disabled="!canLogin" @click="loginFamily()">Login to your Family Account</button>
+      </div>
+      <div v-else class="inputs">
+        <Input :placeholder="'Email'" v-model="email" />
+        <Input :placeholder="'Password'" v-model="password" :isPassword="true" />
+        <Input :placeholder="'Confirm Password'" v-model="password2" :isPassword="true" />
+        <button :disabled="!canCreate" @click="createFamily()">
+          Create Family Account
+        </button>
+      </div>
+      <footer>
+        <button
+          @click="switchMode('login')"
+          :class="['mode-button', loginOrCreate === 'login' ? 'active' : 'inactive']"
+        >
+          Login
+        </button>
+        <button
+          @click="switchMode('create')"
+          :class="['mode-button', loginOrCreate === 'create' ? 'active' : 'inactive']"
+        >
+          Sign Up
+        </button>
+      </footer>
     </div>
-    <div v-else class="card">
-      <Input :placeholder="'Email'" v-model="email" />
-      <Input :placeholder="'Password'" v-model="password" :isPassword="true" />
-      <Input :placeholder="'Confirm Password'" v-model="password2" :isPassword="true" />
-      <button :disabled="!canCreate" @click="createFamily()">
-        Create Family Account
-      </button>
-    </div>
-    <button @click="switchMode()">{{ loginOrCreate === 'login' ? 'Create' : 'Login' }}</button>
+
   </div>
 </template>
 
@@ -104,7 +122,6 @@ export default {
 .login {
   height: 100vh;
   width: 100%;
-  background: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -112,13 +129,45 @@ export default {
 }
 
 .card {
-  height: 50%;
-  width: 50%;
+  height: 75%;
+  width: 25%;
+  background: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   border-radius: 6px;
   box-shadow: var(--shadow);
+  & header {
+    height: 60px;
+    width: 100%;
+    background: var(--orange);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  & .inputs {
+    width: 100%;
+    padding: 0 16px;
+    & div {
+      margin-bottom: 16px;
+    }
+  }
+  & footer {
+    height: 60px;
+    width: 100%;
+    & .mode-button {
+      height: 100%;
+      width: 50%;
+      border: none;
+      &.active {
+        background: var(--orange);
+      }
+      &.inactive {
+        background: #ffd37c;
+        box-shadow: inset var(--shadow);
+      }
+    }
+  }
 }
 </style>

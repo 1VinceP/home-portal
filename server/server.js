@@ -28,7 +28,6 @@ app.use( helmet() );
 /* database connection */
 massive( process.env.DATABASE_URI ).then(db => {
   console.log( chalk.magenta( 'Connected to Database' ) );
-  app.set( 'useDB', true );
   app.set( 'db', db );
   app.get( 'db' ).init.seed()
     .then( res => console.log( res ) )

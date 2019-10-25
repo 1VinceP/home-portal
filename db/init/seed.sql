@@ -12,6 +12,7 @@ CREATE TABLE Families (
   , email      TEXT
   , "password" TEXT
 );
+INSERT INTO Families ( "name", email, "password" ) VALUES ( 'a', 'a', 'a' );
 
 CREATE TABLE Users (
     id SERIAL  PRIMARY KEY

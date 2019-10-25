@@ -22,10 +22,12 @@ export default {
 .input-container {
   height: 40px;
   width: 500px;
+  max-width: 100%;
   position: relative;
   & .input {
     height: 40px;
     width: 500px;
+    max-width: 100%;
     border: 1px solid var(--grey);
     border-radius: 50px;
     padding: 0 16px;
@@ -42,7 +44,7 @@ export default {
   & .search-button {
     position: absolute;
     right: 16px;
-    top: 11px;
+    top: 10px;
     color: var(--blue);
     font-size: 18px;
     cursor: pointer;

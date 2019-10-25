@@ -17,13 +17,8 @@ module.exports = {
   createFamily: async ( req, res ) => {
     const { name, email, password } = req.body;
 
-    if (!req.app.useDB) {
-      res.status(200).send(offlineFamily);
-      return;
-    }
-
     const hash = await bcrypt.hash( password, saltRounds );
-    const response = await req.app.get('db').auth.createFamily({ name, email, password: hash });
+    const [response] = await req.app.get('db').auth.createFamily({ name, email, password: hash });
 
     res.status(200).send(response);
   },
@@ -31,14 +26,11 @@ module.exports = {
   loginFamily: async ( req, res ) => {
     const { email, password } = req.body;
 
-    if (!req.app.useDB) {
-      res.status(200).send(offlineFamily);
-      return;
-    }
-
-    const family = await req.app.get('db').auth.loginFamily({ email });
+    const [family] = await req.app.get('db').auth.loginFamily({ email });
+    console.log(family);
 
     if( family ) {
+      // const match = password === family.password;
       const match = await bcrypt.compare( password, family.password );
       if( match ) {
         res.status(200).send(family);
@@ -46,7 +38,7 @@ module.exports = {
         res.status(401).send({ message: 'Email or password is incorrect' });
       }
     } else {
-      res.status(404).send({ message: `No users with the email, ${email}, were found` });
+      res.status(404).send({ message: `No users with the email, "${email}", were found` });
     }
   },
 
