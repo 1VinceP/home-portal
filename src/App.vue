@@ -38,6 +38,7 @@ export default {
   --navy: #001524;
   --grey: #999999;
   // formats
+  --padding: 16px;
   --shadow: 0 0 6px 1px var(--grey);
 }
 
@@ -59,7 +60,7 @@ export default {
 .page {
   min-height: 100vh;
   width: 100%;
-  padding: 16px;
+  // padding: 16px;
   &.auth-padding {
     padding-left: calc(var(--navSize) + 16px);
   }

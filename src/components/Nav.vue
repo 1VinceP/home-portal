@@ -5,6 +5,7 @@ import AccountGroup from 'vue-material-design-icons/AccountGroup.vue';
 import ListIcon from 'vue-material-design-icons/FormatListBulleted.vue';
 import RewardIcon from 'vue-material-design-icons/Seal.vue';
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue';
+import SettingsIcon from 'vue-material-design-icons/Settings.vue';
 
 export default {
   name: 'base-nav',
@@ -26,7 +27,7 @@ export default {
   },
 
   components: {
-    HouseIcon, AccountGroup, ListIcon, RewardIcon, CalendarIcon,
+    HouseIcon, AccountGroup, ListIcon, RewardIcon, CalendarIcon, SettingsIcon,
   },
 };
 </script>
@@ -36,33 +37,40 @@ export default {
     <router-link
       to="/dashboard"
       :event="disabled ? '' : 'click'"
-      :class="['icon-container', { disabled: disabled }]"
+      :class="['icon-container', { disabled }]"
     >
       <HouseIcon :size="34" />
     </router-link>
-    <router-link to="/family" :event="disabled ? '' : 'click'" class="icon-container">
+    <router-link to="/family" class="icon-container">
       <AccountGroup :size="34" />
     </router-link>
     <router-link
       to="/calendar"
       :event="disabled ? '' : 'click'"
-      :class="['icon-container', { disabled: disabled }]"
+      :class="['icon-container', { disabled }]"
     >
       <CalendarIcon :size="34" />
     </router-link>
     <router-link
       to="/tasks"
       :event="disabled ? '' : 'click'"
-      :class="['icon-container', { disabled: disabled }]"
+      :class="['icon-container', { disabled }]"
     >
       <ListIcon :size="34" />
     </router-link>
     <router-link
       to="/rewards"
       :event="disabled ? '' : 'click'"
-      :class="['icon-container', { disabled: disabled }]"
+      :class="['icon-container', { disabled }]"
     >
       <RewardIcon :size="34" />
+    </router-link>
+    <router-link
+      to="/settings"
+      :event="disabled ? '' : 'click'"
+      :class="['icon-container', { disabled }]"
+    >
+      <SettingsIcon :size="34" />
     </router-link>
   </div>
 </template>

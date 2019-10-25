@@ -30,6 +30,8 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  padding-top: var(--padding);
+  padding-right: var(--padding);
 }
 
 .title {

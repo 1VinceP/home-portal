@@ -122,6 +122,7 @@ export default {
 .login {
   height: 100vh;
   width: 100%;
+  // background: linear-gradient(#fff 70%, #ffd900);
   display: flex;
   flex-direction: column;
   justify-content: center;

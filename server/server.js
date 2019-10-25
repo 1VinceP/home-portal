@@ -30,7 +30,6 @@ massive( process.env.DATABASE_URI ).then(db => {
   console.log( chalk.magenta( 'Connected to Database' ) );
   app.set( 'db', db );
   app.get( 'db' ).init.seed()
-    .then( res => console.log( res ) )
     .catch( res => console.log( res ) );
   listen();
 }).catch(error => {
