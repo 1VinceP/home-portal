@@ -30,8 +30,8 @@ module.exports = {
     console.log(family);
 
     if( family ) {
-      // const match = password === family.password;
-      const match = await bcrypt.compare( password, family.password );
+      const match = password === family.password;
+      // const match = await bcrypt.compare( password, family.password );
       if( match ) {
         res.status(200).send(family);
       } else {

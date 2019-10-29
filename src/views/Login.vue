@@ -48,16 +48,15 @@ export default {
       const { email, password } = this;
       this.validating = true;
 
-      const res = await ky.post( '/auth/family/login', { json: { email, password } } );
-      this.validating = false;
-
-      // TODO: try/catch?
-      if (!res.ok) {
-        this.apiError = 'There was a problem loggin you in';
-      } else {
+      try {
+        const res = await ky.post( '/auth/family/login', { json: { email, password } } );
+        this.validating = false;
         const family = await res.json();
         this.setFamily( family );
         this.$router.push( '/dashboard' );
+      } catch (error) {
+        this.validating = false;
+        this.apiError = 'Username or password is incorrect';
       }
     },
 
@@ -99,6 +98,9 @@ export default {
           Create Family Account
         </button>
       </div>
+
+      <div>{{ apiError }}</div>
+
       <footer>
         <button
           @click="switchMode('login')"
