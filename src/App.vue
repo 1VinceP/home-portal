@@ -1,7 +1,8 @@
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import BaseNav from './components/Nav.vue';
 import BaseHeader from './components/Header.vue';
+import { Anonymous } from '@/constants/authLevel.constants';
 
 export default {
   data: () => ({
@@ -9,7 +10,11 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(['isFamily', 'isAuthenticated']),
+    ...mapState(['authLevel']),
+
+    showNav() {
+      return this.authLevel !== Anonymous;
+    },
   },
 
   components: { BaseNav, BaseHeader },
@@ -18,9 +23,9 @@ export default {
 
 <template>
   <div id="app">
-    <BaseNav v-if="isFamily || isAuthenticated" />
-    <div :class="['page', { 'auth-padding': isFamily || isAuthenticated }]">
-      <BaseHeader v-if="isFamily || isAuthenticated" />
+    <BaseNav v-if="showNav" />
+    <div :class="['page', { 'auth-padding': showNav }]">
+      <BaseHeader v-if="showNav" />
       <router-view />
     </div>
   </div>
@@ -62,7 +67,7 @@ export default {
   width: 100%;
   // padding: 16px;
   &.auth-padding {
-    padding-left: calc(var(--navSize) + 16px);
+    padding-left: var(--navSize);
   }
 }
 </style>

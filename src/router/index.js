@@ -7,6 +7,8 @@ import Login from '@/views/Login.vue';
 import Dashboard from '@/views/Dashboard.vue';
 import Family from '@/views/Family.vue';
 
+import * as AuthLevel from '@/constants/authLevel.constants';
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -20,11 +22,17 @@ const routes = [
     name: 'login',
     component: Login,
     beforeEnter: ( to, from, next ) => {
-      const { getters: { isAuthenticated } } = store;
-      if (isAuthenticated) {
-        next( '/dashboard' );
-      } else {
-        next();
+      const { state: { authLevel } } = store;
+      switch (authLevel) {
+        case AuthLevel.User:
+          next('/dashboard');
+          break;
+        case AuthLevel.NewFamily:
+        case AuthLevel.Family:
+          next('/family');
+          break;
+        default:
+          next();
       }
     },
   },
@@ -62,24 +70,25 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-router.beforeEach(( to, from, next ) => {
-  const { getters: { isAuthenticated, isFamily } } = store;
 
-  if (to.meta.protection === 'full' && !isAuthenticated) {
-    console.log('not authenticated');
+router.beforeEach(( to, from, next ) => {
+  const { state: { authLevel } } = store;
+
+  if (to.meta.protection === 'full' && authLevel !== AuthLevel.User) {
+    console.log( 'not authenticated' );
     next({
       path: '/login',
       query: { redirectFrom: to.fullPath },
     });
-  } else if (to.meta.protection === 'basic' && !isFamily) {
+  } else if (to.meta.protection === 'basic' && authLevel === AuthLevel.Anonymous) {
     console.log('not a family');
     next({
       path: '/login',
       query: { redirectFrom: to.fullPath },
     });
+  } else {
+    next();
   }
-
-  next();
 });
 
 export default router;

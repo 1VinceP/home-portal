@@ -1,17 +1,65 @@
 import ky from 'ky';
 
+const initialState = {
+  loading: false,
+  users: [
+    { name: 'Adam' },
+    { name: 'Steve' },
+    { name: 'Jill' },
+    { name: 'Rachel' },
+  ],
+  newUser: {
+    name: '',
+    password: '',
+    image: '',
+    admin: false,
+    manager: false,
+    child: true,
+    tasks: [],
+    rewards: [],
+    events: [],
+    points: 0,
+    settings: {
+      permissions: {
+        canEditSelf: [],
+        canEditChild: [],
+      },
+      accountSettings: {},
+    },
+  },
+};
+
 export default {
   namespaced: true,
 
-  state: [{
-    id: null, name: '', isAdmin: false, isManager: false,
-  }],
+  state: initialState,
 
   getters: {},
 
   mutations: {
+    reset( state ) {
+      const s = initialState;
+      Object.keys( s ).forEach( key => { state[key] = s[key]; } );
+    },
+
     setUsers( state, users ) {
-      Object.assign( state, users );
+      state.users = users;
+    },
+
+    editUser( state, { prop, value } ) {
+      state.user[prop] = value;
+    },
+
+    editUserSetting( state, { type, prop, value } ) {
+      state.user.settings[type][prop] = value;
+    },
+
+    editNewUser( state, { prop, value }) {
+      state.newUser[prop] = value;
+    },
+
+    editNewUserSetting( state, { type, prop, value } ) {
+      state.newUser.settings[type][prop] = value;
     },
   },
 

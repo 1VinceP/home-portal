@@ -1,28 +1,32 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import users from './modules/users';
-import tasks from './modules/tasks';
-import rewards from './modules/rewards';
-import calendar from './modules/calendar';
+import usersModule from './modules/users';
+import tasksModule from './modules/tasks';
+import rewardsModule from './modules/rewards';
+import calendarModule from './modules/calendar';
+
+// import { Anonymous } from '@/constants/authLevel.constants';
+import { NewFamily } from '../constants/authLevel.constants';
 
 Vue.use( Vuex );
 
 export default new Vuex.Store({
   state: {
-    family: { id: null },
+    authLevel: NewFamily, // anonymous, new family, family, user
+    family: { id: null, users: [] },
     user: { id: null },
   },
 
-  getters: {
-    isAuthenticated: state => (!!state.user.id && state.user.id >= 0)
-      && (!!state.family.id && state.family.id >= 0),
-    isFamily: state => (!!state.family.id && state.family.id >= 0),
-  },
+  getters: {},
 
   mutations: {
-    setFamily: ( state, family ) => {
+    setAuthLevel: ( state, auth ) => {
+      state.authLevel = auth;
+    },
+    setFamily: ( state, { family, auth } ) => {
       state.family = family;
+      state.authLevel = auth;
       // if (family.users.length > 0) {
       //   state.user = family.users[0];
       // }
@@ -30,12 +34,23 @@ export default new Vuex.Store({
   },
 
   actions: {
+    setFamily: ( { state, commit }, family ) => {
+      const {
+        calendar, rewards, tasks, users, ...rest
+      } = family;
+
+      state.family = rest;
+      commit( 'calendar/setCalendar', calendar, { root: true } );
+      commit( 'rewards/setRewards', rewards, { root: true } );
+      commit( 'tasks/setTasks', tasks, { root: true } );
+      commit( 'users/setUsers', users, { root: true } );
+    },
   },
 
   modules: {
-    calendar,
-    users,
-    tasks,
-    rewards,
+    calendar: calendarModule,
+    users: usersModule,
+    tasks: tasksModule,
+    rewards: rewardsModule,
   },
 });

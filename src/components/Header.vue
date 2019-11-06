@@ -35,6 +35,7 @@ header {
 }
 
 .title {
+  padding-left: 16px;
   font-size: 36px;
   color: var(--navy);
 }

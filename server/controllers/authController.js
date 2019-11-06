@@ -20,19 +20,40 @@ module.exports = {
     const hash = await bcrypt.hash( password, saltRounds );
     const [response] = await req.app.get('db').auth.createFamily({ name, email, password: hash });
 
-    res.status(200).send(response);
+    const family = {
+      ...response,
+      calendar: [],
+      tasks: [],
+      rewards: [],
+      users: [],
+    };
+
+    res.status(200).send(family);
   },
 
   loginFamily: async ( req, res ) => {
     const { email, password } = req.body;
 
-    const [family] = await req.app.get('db').auth.loginFamily({ email });
+    const [response] = await req.app.get('db').auth.loginFamily({ email });
     console.log(family);
 
-    if( family ) {
-      const match = password === family.password;
-      // const match = await bcrypt.compare( password, family.password );
+    if( response ) {
+      const match = password === response.password;
+      // const match = await bcrypt.compare( password, response.password );
       if( match ) {
+        // const calendar = await req.app.get('db').calendar.getCalendarByFamily({ familyId: family.id });
+        const rewards = await req.app.get('db').rewards.getRewardsByFamily({ familyId: family.id });
+        const tasks = await req.app.get('db').tasks.getTasksByFamily({ familyId: family.id });
+        const users = await req.app.get('db').users.getUsersByFamily({ familyId: family.id });
+
+        const family = {
+          ...response,
+          // calendar,
+          rewards,
+          tasks,
+          users,
+        };
+
         res.status(200).send(family);
       } else {
         res.status(401).send({ message: 'Email or password is incorrect' });

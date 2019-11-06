@@ -2,6 +2,7 @@
 import { mapMutations } from 'vuex';
 import ky from 'ky';
 import Input from '@/components/BaseInput.vue';
+import { NewFamily, Family } from '@/constants/authLevel.constants';
 
 export default {
   name: 'login',
@@ -25,22 +26,22 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setFamily']),
+    ...mapMutations(['setFamily', 'setAuthLevel']),
 
     async createFamily() {
       const { email, password } = this;
       this.validating = true;
 
-      const res = await ky.post( '/auth/family/create', { json: { email, password } } );
-      this.validating = false;
-
-      // TODO: try/catch?
-      if (!res.ok) {
-        this.apiError = 'There was a problem';
-      } else {
+      try {
+        const res = await ky.post( '/auth/family/create', { json: { email, password } } );
+        this.validating = false;
         const family = await res.json();
         this.setFamily( family );
+        this.setAuthLevel( NewFamily );
         this.$router.push( '/family' );
+      } catch (error) {
+        this.validating = false;
+        this.apiError = 'Failed to create family. Please try again';
       }
     },
 
@@ -53,7 +54,8 @@ export default {
         this.validating = false;
         const family = await res.json();
         this.setFamily( family );
-        this.$router.push( '/dashboard' );
+        this.setAuthLevel( Family );
+        this.$router.push( '/family' );
       } catch (error) {
         this.validating = false;
         this.apiError = 'Username or password is incorrect';

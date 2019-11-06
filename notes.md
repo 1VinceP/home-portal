@@ -6,6 +6,7 @@
   - [x] Create an account and save to db
   - [ ] New user flow
     - [x] Redirect to Family page
+      - [x] Without bugs
       - [x] Nav/Header shown, Nav links disabled
       - [x] Nav links still protected
     - [ ] Create first admin user (see "(1.3) Family detail page")
@@ -111,17 +112,18 @@
   password: String,
   image: String,
   admin: Boolean,
-  Manager: Boolean,
+  manager: Boolean,
   child: Function, // if not admin or manager
-  canEditSelf: Array, // list of own properties this user can edit
-  canEditChild: Array, // list of child user properties this user can edit
   tasks: Array, // list of assigned tasks
   rewards: Array, // list of purchased rewards
   events: Array, // list of calendar events related to this user
   points: Number, // quantity of accumulated points
   settings: {
-    permissions: Array, // only modifiable by Admin
-    accountSettings: Array,
+    permissions: { // only modifiable by Admin
+      canEditSelf: Array, // list of own properties this user can edit
+      canEditChild: Array, // list of child user properties this user can edit
+    },
+    accountSettings: Object,
   },
   meta: {
     createdOn: Date,

@@ -1,5 +1,5 @@
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import HouseIcon from 'vue-material-design-icons/Home.vue';
 import AccountGroup from 'vue-material-design-icons/AccountGroup.vue';
 import ListIcon from 'vue-material-design-icons/FormatListBulleted.vue';
@@ -11,10 +11,10 @@ export default {
   name: 'base-nav',
 
   computed: {
-    ...mapGetters(['isAuthenticated']),
+    ...mapState(['authLevel']),
 
     disabled() {
-      return !this.isAuthenticated;
+      return this.authLevel !== 'user';
     },
   },
 

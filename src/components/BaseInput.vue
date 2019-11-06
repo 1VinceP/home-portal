@@ -1,29 +1,40 @@
 <script>
 export default {
   name: 'base-input',
-  props: ['value', 'isSearch', 'isPassword', 'placeholder'],
+  props: [
+    'value', 'isSearch', 'isPassword', 'placeholder', 'label', 'onClick',
+  ],
 };
 </script>
 
 <template>
   <div class="input-container">
+    <div v-show="label" class="label">{{ label }}</div>
     <input
-      :class="['input', { isSearch }]"
+      :class="['input', { isSearch, hasLabel: !!label }]"
       :value="value"
       @input="$emit('input', $event.target.value)"
       :placeholder="placeholder"
       :type="isPassword && 'password'"
     />
-    <span v-show="isSearch" class="search-button">Search</span>
+    <span v-show="isSearch" class="search-button" @click="onClick()">
+      Search
+    </span>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .input-container {
-  height: 40px;
   width: 500px;
   max-width: 100%;
+  display: flex;
+  flex-direction: column;
   position: relative;
+  & .label {
+    height: 20px;
+    display: flex;
+    align-items: center;
+  }
   & .input {
     height: 40px;
     width: 500px;
@@ -39,6 +50,10 @@ export default {
     }
     &.isSearch {
       padding-right: 80px;
+    }
+    &.hasLabel {
+      border-radius: 0 50px 50px 50px;
+      margin-bottom: 16px;
     }
   }
   & .search-button {
