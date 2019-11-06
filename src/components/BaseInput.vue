@@ -34,6 +34,8 @@ export default {
     height: 20px;
     display: flex;
     align-items: center;
+    font-size: 14px;
+    color: var(--navy);
   }
   & .input {
     height: 40px;
@@ -44,7 +46,6 @@ export default {
     padding: 0 16px;
     font-size: 16px;
     outline: none;
-    transition: all .15s ease-in-out;
     &:focus {
       border: 2px solid var(--orange);
     }

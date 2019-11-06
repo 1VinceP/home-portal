@@ -53,7 +53,7 @@ export default {
         {{ user.name }}
         <ChevronRightIcon class="arrow-right" />
       </div>
-      <div class="user" @click="changeDisplay( 'newUser' )">
+      <div v-show="user.isAdmin" class="user" @click="changeDisplay( 'newUser' )">
         + Add
         <ChevronRightIcon class="arrow-right" />
       </div>

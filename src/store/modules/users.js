@@ -3,10 +3,10 @@ import ky from 'ky';
 const initialState = {
   loading: false,
   users: [
-    { name: 'Adam' },
-    { name: 'Steve' },
-    { name: 'Jill' },
-    { name: 'Rachel' },
+    { name: 'Adam', points: 100 },
+    { name: 'Steve', points: 200 },
+    { name: 'Jill', points: 1500 },
+    { name: 'Rachel', points: 50 },
   ],
   newUser: {
     name: '',
