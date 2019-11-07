@@ -89,13 +89,13 @@ export default {
       <header>Title</header>
       <div v-if="loginOrCreate === 'login'" class="inputs">
         <Input :placeholder="'Email'" v-model="email" />
-        <Input :placeholder="'Password'" v-model="password" :isPassword="true" />
+        <Input :placeholder="'Password'" v-model="password" type="password" />
         <button :disabled="!canLogin" @click="loginFamily()">Login to your Family Account</button>
       </div>
       <div v-else class="inputs">
         <Input :placeholder="'Email'" v-model="email" />
-        <Input :placeholder="'Password'" v-model="password" :isPassword="true" />
-        <Input :placeholder="'Confirm Password'" v-model="password2" :isPassword="true" />
+        <Input :placeholder="'Password'" v-model="password" type="password" />
+        <Input :placeholder="'Confirm Password'" v-model="password2" type="password" />
         <button :disabled="!canCreate" @click="createFamily()">
           Create Family Account
         </button>
@@ -134,8 +134,8 @@ export default {
 }
 
 .card {
-  height: 75%;
-  width: 25%;
+  height: 600px;
+  width: 400px;
   background: #fff;
   display: flex;
   flex-direction: column;

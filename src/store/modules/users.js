@@ -48,6 +48,8 @@ export default {
 
     editUser( state, { prop, value } ) {
       state.user[prop] = value;
+      if (prop === 'admin' && value === true) state.newUser.manager = true;
+      if (prop === 'manager' && value === false) state.newUser.admin = false;
     },
 
     editUserSetting( state, { type, prop, value } ) {
@@ -56,6 +58,8 @@ export default {
 
     editNewUser( state, { prop, value }) {
       state.newUser[prop] = value;
+      if (prop === 'admin' && value === true) state.newUser.manager = true;
+      if (prop === 'manager' && value === false) state.newUser.admin = false;
     },
 
     editNewUserSetting( state, { type, prop, value } ) {

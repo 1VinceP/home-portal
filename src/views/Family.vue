@@ -53,15 +53,14 @@ export default {
         {{ user.name }}
         <ChevronRightIcon class="arrow-right" />
       </div>
-      <div v-show="user.isAdmin" class="user" @click="changeDisplay( 'newUser' )">
+      <div v-show="user.admin" class="user" @click="changeDisplay( 'newUser' )">
         + Add
         <ChevronRightIcon class="arrow-right" />
       </div>
     </section>
 
     <section class="details">
-      <div class="title">{{ title }}</div>
-      <FamilyForm :user="display" :isNew="isNew" />
+      <FamilyForm :title="title" :user="display" :isNew="isNew" />
     </section>
   </div>
 </template>
@@ -113,6 +112,7 @@ export default {
   & .title {
     height: 60px;
     width: 100%;
+    margin-bottom: 20px;
     color: var(--navy);
     font-size: 20px;
   }

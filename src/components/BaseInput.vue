@@ -2,7 +2,9 @@
 export default {
   name: 'base-input',
   props: [
-    'value', 'isSearch', 'isPassword', 'placeholder', 'label', 'onClick',
+    'value', 'isSearch', 'type',
+    'placeholder', 'label', 'name',
+    'autocomplete',
   ],
 };
 </script>
@@ -11,13 +13,15 @@ export default {
   <div class="input-container">
     <div v-show="label" class="label">{{ label }}</div>
     <input
+      :name="name"
       :class="['input', { isSearch, hasLabel: !!label }]"
       :value="value"
-      @input="$emit('input', $event.target.value)"
+      @input="$emit('input', $event.target.value, $event.target.name, $event.target.type)"
       :placeholder="placeholder"
-      :type="isPassword && 'password'"
+      :type="type"
+      :autocomplete="autocomplete || (type === 'password' && 'off')"
     />
-    <span v-show="isSearch" class="search-button" @click="onClick()">
+    <span v-show="isSearch" class="search-button" @click="$emit('click', value)">
       Search
     </span>
   </div>
