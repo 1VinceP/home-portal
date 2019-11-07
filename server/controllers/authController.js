@@ -20,6 +20,8 @@ module.exports = {
     const hash = await bcrypt.hash( password, saltRounds );
     const [response] = await req.app.get('db').auth.createFamily({ name, email, password: hash });
 
+    req.session.familyId = response.id;
+
     const family = {
       ...response,
       calendar: [],
@@ -35,12 +37,13 @@ module.exports = {
     const { email, password } = req.body;
 
     const [response] = await req.app.get('db').auth.loginFamily({ email });
-    console.log(family);
 
     if( response ) {
       const match = password === response.password;
       // const match = await bcrypt.compare( password, response.password );
       if( match ) {
+        req.session.familyId = response.id;
+
         // const calendar = await req.app.get('db').calendar.getCalendarByFamily({ familyId: family.id });
         const rewards = await req.app.get('db').rewards.getRewardsByFamily({ familyId: family.id });
         const tasks = await req.app.get('db').tasks.getTasksByFamily({ familyId: family.id });

@@ -7,16 +7,33 @@ export default {
     id: null,
   }),
 
+  computed: {
+    size() {
+      return { width: `${this.width}px` };
+    },
+  },
+
   mounted() {
     this.id = uuid();
   },
 
-  props: ['name', 'checked', 'label', 'full', 'spacing'],
+  props: {
+    name: String,
+    label: String,
+    spacing: String,
+    width: { type: Number, default: 140 },
+    checked: Boolean,
+    full: Boolean,
+    disabled: Boolean,
+    green: Boolean,
+    orange: Boolean,
+    red: Boolean,
+  },
 };
 </script>
 
 <template>
-<div :class="['toggle', { full, large: spacing === 'large' }]">
+<div :class="['toggle', { full, large: spacing === 'large' }]" :style="size">
   <div class="label">{{ label }}</div>
   <div>
     <input
@@ -26,8 +43,9 @@ export default {
       type="checkbox"
       :checked="checked"
       @input="$emit('change', !checked, $event.target.name)"
+      :disabled="disabled"
     />
-    <label :for="id + '-switch'">Toggle</label>
+    <label :class="{ green, orange, red }" :for="id + '-switch'">Toggle</label>
   </div>
 </div>
 </template>
@@ -35,7 +53,7 @@ export default {
 <style lang="scss" scoped>
 .toggle {
   height: 20px;
-  width: 120px;
+  // width: computed
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -67,29 +85,57 @@ label {
   position: relative;
   text-indent: -9999px;
   cursor: pointer;
+  transition: background .3s;
   &::after {
+    height: 20px;
+    width: 20px;
     content: "";
     position: absolute;
-    top: 2px;
-    left: 2px;
-    height: 16px;
-    width: 16px;
+    top: 0;
+    left: 0;
     background: #fff;
+    border: 1px solid var(--grey);
     border-radius: 50%;
     transition: .3s;
-  }
-  &:active::after {
-    width: 27px;
   }
 }
 
 .checkbox:checked {
   & + label {
-    background: var(--orange);
+    background: var(--blue);
+    &::after {
+      border: 1px solid var(--blue);
+      left: calc(100%);
+      transform: translateX(-100%);
+    }
+    &.green {
+      background: var(--green);
+      &::after { border: 1px solid var(--green) }
+    }
+    &.orange {
+      background: var(--orange);
+      &::after { border: 1px solid var(--orange) }
+    }
+    &.red {
+      background: var(--red);
+      &::after { border: 1px solid var(--red) }
+    }
   }
-  & + label::after {
-    left: calc(100% - 2px);
-    transform: translateX(-100%);
+}
+
+.checkbox[disabled] {
+  & + label {
+    background: var(--grey-faded);
+    cursor: default;
+    &::after {
+      height: 19px;
+      width: 19px;
+    }
+  }
+  &:checked {
+    & + label {
+      opacity: 0.7;
+    }
   }
 }
 </style>

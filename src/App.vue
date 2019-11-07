@@ -37,11 +37,15 @@ export default {
 :root {
   --navSize: 70px;
   // colors
+  --green: #17AE82;
   --orange: #ff7d00;
-  --red: #78290f;
+  --orange-faded: rgba(255, 242, 167, 0.4);
+  --red: #C42338;
   --blue: #1e96fc;
+  --blue-faded: rgba(167, 227, 255, 0.2);
   --navy: #001524;
   --grey: #999999;
+  --grey-faded: #99999933;
   // formats
   --padding: 16px;
   --shadow: 0 0 6px 1px var(--grey);

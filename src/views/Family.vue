@@ -60,7 +60,7 @@ export default {
     </section>
 
     <section class="details">
-      <FamilyForm :title="title" :user="display" :isNew="isNew" />
+      <FamilyForm :title="title" :displayedUser="display" :isNew="isNew" />
     </section>
   </div>
 </template>
@@ -86,7 +86,7 @@ export default {
     color: var(--blue);
     cursor: pointer;
     &:hover {
-      background: rgba(167, 227, 255, 0.2);
+      background: #a7e3ff33;
       & .arrow-right {
         display: block;
       }
@@ -94,7 +94,7 @@ export default {
     &:last-child {
       color: var(--orange);
       &:hover {
-        background: rgba(255, 242, 167, 0.4);
+        background: #fff2a766;
       }
     }
   }

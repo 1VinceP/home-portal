@@ -1,11 +1,19 @@
 <script>
 export default {
   name: 'base-input',
-  props: [
-    'value', 'isSearch', 'type',
-    'placeholder', 'label', 'name',
-    'autocomplete',
-  ],
+
+  props: {
+    label: String,
+    value: [String, Number],
+    type: String,
+    name: String,
+    autocomplete: String,
+    placeholder: String,
+    isSearch: Boolean,
+    green: Boolean,
+    orange: Boolean,
+    red: Boolean,
+  },
 };
 </script>
 
@@ -14,7 +22,7 @@ export default {
     <div v-show="label" class="label">{{ label }}</div>
     <input
       :name="name"
-      :class="['input', { isSearch, hasLabel: !!label }]"
+      :class="['input', { isSearch, hasLabel: !!label, green, orange, red }]"
       :value="value"
       @input="$emit('input', $event.target.value, $event.target.name, $event.target.type)"
       :placeholder="placeholder"
@@ -51,7 +59,7 @@ export default {
     font-size: 16px;
     outline: none;
     &:focus {
-      border: 2px solid var(--orange);
+      border: 2px solid var(--blue);
     }
     &.isSearch {
       padding-right: 80px;
@@ -60,6 +68,9 @@ export default {
       border-radius: 0 50px 50px 50px;
       margin-bottom: 16px;
     }
+    &.green:focus { border: 2px solid var(--green); }
+    &.orange:focus { border: 2px solid var(--orange); }
+    &.red:focus { border: 2px solid var(--red); }
   }
   & .search-button {
     position: absolute;

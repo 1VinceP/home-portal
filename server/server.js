@@ -1,13 +1,16 @@
 require('dotenv').config();
 
-const express = require('express')
-    , bodyParser = require('body-parser')
-    , session = require('cookie-session')
-    , massive = require('massive')
-    , helmet = require('helmet')
-    , chalk = require('chalk');
+const express = require( 'express' )
+    , bodyParser = require( 'body-parser' )
+    , session = require( 'cookie-session' )
+    , massive = require( 'massive' )
+    , helmet = require( 'helmet' )
+    , chalk = require( 'chalk' );
 
-const authController = require('./controllers/authController');
+const authValidation = require( './middleware/authValidation' );
+
+const authController = require( './controllers/authController' );
+const userController = require( './controllers/userController' );
 
 let app = express();
 
@@ -19,7 +22,7 @@ app.use(session({
   cookie: {
     secure: true,
     httpOnly: true,
-    expires: new Date(Date.now() + 60 * 60 * 1000) // 1 hour
+    expires: new Date( Date.now() + 60 * 60 * 1000 ) // 1 hour
   },
 }));
 app.use( bodyParser.json() );
@@ -42,7 +45,7 @@ massive( process.env.DATABASE_URI ).then(db => {
 app.post( '/auth/family/create', authController.createFamily );
 app.post( '/auth/family/login', authController.loginFamily );
 
-
+app.post( '/family/:familyId/users', authValidation, userController.createUser );
 
 
 

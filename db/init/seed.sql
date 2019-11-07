@@ -2,9 +2,13 @@ DROP TABLE IF EXISTS Families;
 DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Rewards;
 DROP TABLE IF EXISTS Tasks;
-DROP TABLE IF EXISTS User_connections;
 DROP TABLE IF EXISTS Family_tasks;
 DROP TABLE IF EXISTS Family_rewards;
+DROP TABLE IF EXISTS "Permissions";
+DROP TABLE IF EXISTS Settings;
+DROP TABLE IF EXISTS User_connections;
+DROP TABLE IF EXISTS User_permissions;
+DROP TABLE IF EXISTS User_settings;
 
 CREATE TABLE Families (
     id SERIAL  PRIMARY KEY
@@ -44,13 +48,6 @@ CREATE TABLE Tasks (
   , reward        SMALLINT
 );
 
-CREATE TABLE User_connections (
-    id SERIAL PRIMARY KEY
-  , "user_id" INT -- FOREIGN KEY to Users
-  , reward_id INT -- FOREIGN KEY to Rewards
-  , task_id   INT -- FOREIGN KEY to Tasks
-);
-
 CREATE TABLE Family_tasks (
     id SERIAL  PRIMARY KEY
   , family_id  INT
@@ -66,4 +63,35 @@ CREATE TABLE Family_rewards (
   , family_id INT
   , reward_id INT
   , cost      SMALLINT
+);
+
+CREATE TABLE "Permissions" (
+    id SERIAL PRIMARY KEY
+  , "name"    TEXT
+);
+
+CREATE TABLE Settings (
+    id SERIAL PRIMARY KEY
+  , "name"    TEXT
+);
+
+CREATE TABLE User_connections (
+    id SERIAL PRIMARY KEY
+  , "user_id" INT -- FOREIGN KEY to Users
+  , reward_id INT -- FOREIGN KEY to Rewards
+  , task_id   INT -- FOREIGN KEY to Tasks
+);
+
+CREATE TABLE User_permissions (
+    id SERIAL     PRIMARY KEY
+  , "user_id"     INT
+  , permission_id INT
+  , "value"       BOOLEAN
+);
+
+CREATE TABLE User_settings (
+    id SERIAL  PRIMARY KEY
+  , "user_id"  INT
+  , setting_id INT
+  , "value"    BOOLEAN
 );

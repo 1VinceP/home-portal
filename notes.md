@@ -54,7 +54,7 @@
 ### Task
 | Property    | Admin | Manager            | Child              |
 | ----------- | ----- | ------------------ | ------------------ |
-| Create task | true  | false              | false              |
+| Create task | true  | with permission    | false              |
 | Read task   | true  | true (except meta) | true (except meta) |
 | Edit task   | true  | with permission    | false              |
 | Assign task | true  | with permission    | false              |
