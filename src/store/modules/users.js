@@ -21,8 +21,21 @@ const initialState = {
     points: 0,
     settings: {
       permissions: {
-        canEditSelf: [],
-        canEditChild: [],
+        ownName: false,
+        ownPassword: false,
+        ownImage: false,
+        ownSettings: false,
+        otherName: false,
+        otherPassword: false,
+        otherPoints: false,
+        assignTasks: false,
+        assignEvents: false,
+        createTask: false,
+        editTask: false,
+        editEvent: false,
+        editReward: false,
+        createRecipe: false,
+        editRecipe: false,
       },
       accountSettings: {},
     },
@@ -65,14 +78,25 @@ export default {
     editNewUserSetting( state, { type, prop, value } ) {
       state.newUser.settings[type][prop] = value;
     },
+
+    assignAdmin( state, userType ) {
+      const permissions = { ...initialState.newUser.settings.permissions };
+      Object.keys( permissions ).forEach(key => {
+        state[userType].settings.permissions[key] = true;
+      });
+    },
   },
 
   actions: {
-    async createUser( { commit, rootState }, user ) {
-      const { id: familyId } = rootState.family;
+    async createUser( { state, commit } ) {
+      const { newUser: user } = state;
 
-      const res = await ky.post( `/family/${familyId}/users`, { json: { user } } ).json();
+      const res = await ky.post( '/family/users', { json: { user } } ).json();
       commit( 'users/setUsers', res );
+    },
+
+    async updateUser( { commit }, user ) {
+      if (user.admin) commit( 'users/assignAdmin' );
     },
   },
 };

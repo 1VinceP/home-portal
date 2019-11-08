@@ -4,8 +4,6 @@ DROP TABLE IF EXISTS Rewards;
 DROP TABLE IF EXISTS Tasks;
 DROP TABLE IF EXISTS Family_tasks;
 DROP TABLE IF EXISTS Family_rewards;
-DROP TABLE IF EXISTS "Permissions";
-DROP TABLE IF EXISTS Settings;
 DROP TABLE IF EXISTS User_connections;
 DROP TABLE IF EXISTS User_permissions;
 DROP TABLE IF EXISTS User_settings;
@@ -20,15 +18,16 @@ INSERT INTO Families ( "name", email, "password" ) VALUES ( 'a', 'a', 'a' );
 
 CREATE TABLE Users (
     id SERIAL  PRIMARY KEY
-  , username   TEXT
+  , "name"     TEXT
   , "password" TEXT
   , "admin"    BOOLEAN
   , manager    BOOLEAN
+  , points     INT
   , family_id  INT -- FOREIGN KEY to Family
 );
-INSERT INTO Users ( username, "admin", manager ) VALUES ( 'Demo Admin', true, true );
-INSERT INTO Users ( username, "admin", manager ) VALUES ( 'Demo Manager', false, true );
-INSERT INTO Users ( username, "admin", manager ) VALUES ( 'Demo User', false, false );
+INSERT INTO Users ( "name", "admin", manager ) VALUES ( 'Demo Admin', true, true );
+INSERT INTO Users ( "name", "admin", manager ) VALUES ( 'Demo Manager', false, true );
+INSERT INTO Users ( "name", "admin", manager ) VALUES ( 'Demo User', false, false );
 
 CREATE TABLE Rewards (
     id SERIAL     PRIMARY KEY
@@ -65,16 +64,6 @@ CREATE TABLE Family_rewards (
   , cost      SMALLINT
 );
 
-CREATE TABLE "Permissions" (
-    id SERIAL PRIMARY KEY
-  , "name"    TEXT
-);
-
-CREATE TABLE Settings (
-    id SERIAL PRIMARY KEY
-  , "name"    TEXT
-);
-
 CREATE TABLE User_connections (
     id SERIAL PRIMARY KEY
   , "user_id" INT -- FOREIGN KEY to Users
@@ -83,10 +72,23 @@ CREATE TABLE User_connections (
 );
 
 CREATE TABLE User_permissions (
-    id SERIAL     PRIMARY KEY
-  , "user_id"     INT
-  , permission_id INT
-  , "value"       BOOLEAN
+    id SERIAL      PRIMARY KEY
+  , "user_id"      INT
+  , own_name       BOOLEAN
+  , own_password   BOOLEAN
+  , own_image      BOOLEAN
+  , own_settings   BOOLEAN
+  , other_name     BOOLEAN
+  , other_password BOOLEAN
+  , other_points   BOOLEAN
+  , assign_tasks   BOOLEAN
+  , assign_events  BOOLEAN
+  , create_task    BOOLEAN
+  , edit_task      BOOLEAN
+  , edit_event     BOOLEAN
+  , edit_reward    BOOLEAN
+  , create_recipe  BOOLEAN
+  , edit_recipe    BOOLEAN
 );
 
 CREATE TABLE User_settings (

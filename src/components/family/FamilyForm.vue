@@ -1,5 +1,5 @@
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState, mapActions } from 'vuex';
 import Button from '@/components/BaseButton.vue';
 import Collapsible from '@/components/BaseCollapsible.vue';
 import Input from '@/components/BaseInput.vue';
@@ -28,8 +28,17 @@ export default {
     },
   },
 
+  mounted() {
+    if (this.isNew) {
+      this.editNewUser({ prop: 'admin', value: true });
+      this.editNewUser({ prop: 'manager', value: true });
+      this.assignAdmin( 'newUser' );
+    }
+  },
+
   methods: {
-    ...mapMutations( 'users', ['editUser', 'editNewUser'] ),
+    ...mapMutations( 'users', ['editUser', 'editNewUser', 'assignAdmin'] ),
+    ...mapActions( 'users', ['createUser'] ),
 
     edit( value, prop, type ) {
       let v = value;
@@ -43,16 +52,9 @@ export default {
 
     saveUser() {
       if (this.validated) {
-        console.log('saved!');
+        this.createUser();
       }
     },
-  },
-
-  mounted() {
-    if (this.isNew) {
-      this.editNewUser({ prop: 'admin', value: true });
-      this.editNewUser({ prop: 'manager', value: true });
-    }
   },
 
   components: {

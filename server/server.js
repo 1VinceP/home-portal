@@ -27,6 +27,10 @@ app.use(session({
 }));
 app.use( bodyParser.json() );
 app.use( helmet() );
+app.use(( req, res, next ) => {
+  req.session.familyId = 1;
+  next();
+});
 
 /* database connection */
 massive( process.env.DATABASE_URI ).then(db => {
@@ -45,7 +49,8 @@ massive( process.env.DATABASE_URI ).then(db => {
 app.post( '/auth/family/create', authController.createFamily );
 app.post( '/auth/family/login', authController.loginFamily );
 
-app.post( '/family/:familyId/users', authValidation, userController.createUser );
+// Users
+app.post( '/family/users', authValidation, userController.createUser );
 
 
 

@@ -16,15 +16,19 @@ export default {
     ...mapState( 'users', ['users', 'newUser'] ),
   },
 
-  mounted() {
+  beforeMount() {
     if (this.authLevel === NewFamily) {
-      this.changeDisplay( 'newUser' );
+      this.changeDisplay( 'firstUser' );
     }
   },
 
   methods: {
     changeDisplay( who ) {
-      if (who === 'newUser') {
+      if (who === 'firstUser') {
+        this.display = this.newUser;
+        this.title = 'Add yourself!';
+        this.isNew = true;
+      } else if (who === 'newUser') {
         this.display = this.newUser;
         this.title = 'Add family member';
         this.isNew = true;
