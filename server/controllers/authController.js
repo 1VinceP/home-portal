@@ -45,9 +45,9 @@ module.exports = {
         req.session.familyId = response.id;
 
         // const calendar = await req.app.get('db').calendar.getCalendarByFamily({ familyId: family.id });
-        const rewards = await req.app.get('db').rewards.getRewardsByFamily({ familyId: family.id });
-        const tasks = await req.app.get('db').tasks.getTasksByFamily({ familyId: family.id });
-        const users = await req.app.get('db').users.getUsersByFamily({ familyId: family.id });
+        const rewards = await req.app.get('db').rewards.getRewardsByFamily({ familyId: response.id });
+        const tasks = await req.app.get('db').tasks.getTasksByFamily({ familyId: response.id });
+        const users = await req.app.get('db').users.getUsersByFamily({ familyId: response.id });
 
         const family = {
           ...response,

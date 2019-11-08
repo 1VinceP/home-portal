@@ -27,10 +27,6 @@ app.use(session({
 }));
 app.use( bodyParser.json() );
 app.use( helmet() );
-app.use(( req, res, next ) => {
-  req.session.familyId = 1;
-  next();
-});
 
 /* database connection */
 massive( process.env.DATABASE_URI ).then(db => {

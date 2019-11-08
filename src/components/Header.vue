@@ -1,6 +1,6 @@
 <script>
 import startCase from 'lodash/startCase';
-import Input from './BaseInput.vue';
+import { Input } from '@/components';
 
 export default {
   name: 'base-header',
@@ -25,6 +25,7 @@ export default {
 
 <style lang="scss" scoped>
 header {
+  height: 56px;
   width: 100%;
   display: flex;
   justify-content: space-between;

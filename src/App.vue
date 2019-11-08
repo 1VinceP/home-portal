@@ -49,6 +49,7 @@ export default {
   // formats
   --padding: 16px;
   --shadow: 0 0 6px 1px var(--grey);
+  --header-height: 72px;
 }
 
 /* styles */

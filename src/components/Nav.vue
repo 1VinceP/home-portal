@@ -6,6 +6,7 @@ import ListIcon from 'vue-material-design-icons/FormatListBulleted.vue';
 import RewardIcon from 'vue-material-design-icons/Seal.vue';
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue';
 import SettingsIcon from 'vue-material-design-icons/Settings.vue';
+import { User } from '@/constants/authLevel.constants';
 
 export default {
   name: 'base-nav',
@@ -14,7 +15,7 @@ export default {
     ...mapState(['authLevel']),
 
     disabled() {
-      return this.authLevel !== 'user';
+      return this.authLevel !== User;
     },
   },
 

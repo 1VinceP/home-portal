@@ -1,9 +1,8 @@
 <script>
 import { mapMutations, mapState, mapActions } from 'vuex';
-import Button from '@/components/BaseButton.vue';
-import Collapsible from '@/components/BaseCollapsible.vue';
-import Input from '@/components/BaseInput.vue';
-import Toggle from '@/components/BaseToggle.vue';
+import {
+  Button, Collapsible, Input, Toggle,
+} from '@/components';
 
 export default {
   name: 'family-form',
@@ -50,9 +49,10 @@ export default {
       }
     },
 
-    saveUser() {
+    async saveUser() {
       if (this.validated) {
-        this.createUser();
+        const isCreated = await this.createUser();
+        if (isCreated) this.$router.push( '/dashboard' );
       }
     },
   },

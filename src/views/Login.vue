@@ -1,7 +1,7 @@
 <script>
 import { mapMutations } from 'vuex';
 import ky from 'ky';
-import Input from '@/components/BaseInput.vue';
+import { Input, Button } from '@/components';
 import { NewFamily, Family } from '@/constants/authLevel.constants';
 
 export default {
@@ -14,6 +14,7 @@ export default {
     validating: false,
     apiError: '',
     navError: '',
+    validationError: false,
   }),
 
   computed: {
@@ -28,37 +29,52 @@ export default {
   methods: {
     ...mapMutations(['setFamily', 'setAuthLevel']),
 
+    setValidationError() {
+      this.validationError = true;
+    },
+
     async createFamily() {
       const { email, password } = this;
-      this.validating = true;
 
-      try {
-        const res = await ky.post( '/auth/family/create', { json: { email, password } } );
-        this.validating = false;
-        const family = await res.json();
-        this.setFamily( family );
-        this.setAuthLevel( NewFamily );
-        this.$router.push( '/family' );
-      } catch (error) {
-        this.validating = false;
-        this.apiError = 'Failed to create family. Please try again';
+      if (this.canCreate) {
+        this.validating = true;
+        this.validationError = false;
+
+        try {
+          const res = await ky.post( '/auth/family/create', { json: { email, password } } );
+          this.validating = false;
+          const family = await res.json();
+          this.setFamily( family );
+          this.setAuthLevel( NewFamily );
+          this.$router.push( '/family' );
+        } catch (error) {
+          this.validating = false;
+          this.apiError = 'Failed to create family. Please try again';
+        }
       }
     },
 
     async loginFamily() {
       const { email, password } = this;
-      this.validating = true;
 
-      try {
-        const res = await ky.post( '/auth/family/login', { json: { email, password } } );
-        this.validating = false;
-        const family = await res.json();
-        this.setFamily( family );
-        this.setAuthLevel( Family );
-        this.$router.push( '/family' );
-      } catch (error) {
-        this.validating = false;
-        this.apiError = 'Username or password is incorrect';
+      if (this.canLogin) {
+        this.validating = true;
+        this.validationError = false;
+
+        try {
+          const res = await ky.post( '/auth/family/login', { json: { email, password } } );
+          this.validating = false;
+          const family = await res.json();
+          this.setFamily( family );
+
+          if (family.users.length === 0) this.setAuthLevel( NewFamily );
+          else this.setAuthLevel( Family );
+
+          this.$router.push( '/family' );
+        } catch (error) {
+          this.validating = false;
+          this.apiError = 'Username or password is incorrect';
+        }
       }
     },
 
@@ -78,7 +94,7 @@ export default {
     next();
   },
 
-  components: { Input },
+  components: { Input, Button },
 };
 </script>
 
@@ -88,17 +104,29 @@ export default {
     <div class="card">
       <header>Title</header>
       <div v-if="loginOrCreate === 'login'" class="inputs">
-        <Input :placeholder="'Email'" v-model="email" />
-        <Input :placeholder="'Password'" v-model="password" type="password" />
-        <button :disabled="!canLogin" @click="loginFamily()">Login to your Family Account</button>
+        <Input
+          v-model="email"
+          :placeholder="'Email'"
+          errorMessage="Email must not be empty"
+          :validation="value => !!value"
+        />
+        <Input
+          v-model="password"
+          :placeholder="'Password'"
+          errorMessage="Password must not be empty"
+          :validation="value => !!value"
+          type="password"
+          @enter="loginFamily"
+        />
+        <Button primary :disabled="!canLogin" @click="loginFamily">Login</Button>
       </div>
       <div v-else class="inputs">
         <Input :placeholder="'Email'" v-model="email" />
         <Input :placeholder="'Password'" v-model="password" type="password" />
         <Input :placeholder="'Confirm Password'" v-model="password2" type="password" />
-        <button :disabled="!canCreate" @click="createFamily()">
+        <Button :disabled="!canCreate" @click="createFamily">
           Create Family Account
-        </button>
+        </Button>
       </div>
 
       <div>{{ apiError }}</div>

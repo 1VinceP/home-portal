@@ -1,9 +1,10 @@
 import ky from 'ky';
+import { User } from '@/constants/authLevel.constants';
 
 const initialState = {
   loading: false,
   users: [
-    { name: 'Adam', points: 100 },
+    { name: 'Adam', password: 'bob', points: 100 },
     { name: 'Steve', points: 200 },
     { name: 'Jill', points: 1500 },
     { name: 'Rachel', points: 50 },
@@ -92,7 +93,10 @@ export default {
       const { newUser: user } = state;
 
       const res = await ky.post( '/family/users', { json: { user } } ).json();
-      commit( 'users/setUsers', res );
+      commit( 'setAuthLevel', User, { root: true } );
+      commit( 'setUsers', res );
+
+      return true;
     },
 
     async updateUser( { commit }, user ) {

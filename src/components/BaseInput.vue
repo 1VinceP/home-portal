@@ -1,18 +1,35 @@
 <script>
 export default {
   name: 'base-input',
+  data: () => ({
+    showError: false,
+  }),
+
+  methods: {
+    onBlur() {
+      if (!this.errorMessage) return false;
+      if (!this.validation) {
+        console.error( 'You must provide a validation function to display an error' );
+        return false;
+      }
+      this.showError = !this.validation(this.value);
+      return true;
+    },
+  },
 
   props: {
     label: String,
     value: [String, Number],
     type: String,
     name: String,
+    errorMessage: String,
     autocomplete: String,
     placeholder: String,
     isSearch: Boolean,
     green: Boolean,
     orange: Boolean,
     red: Boolean,
+    validation: Function,
   },
 };
 </script>
@@ -22,13 +39,27 @@ export default {
     <div v-show="label" class="label">{{ label }}</div>
     <input
       :name="name"
-      :class="['input', { isSearch, hasLabel: !!label, green, orange, red }]"
-      :value="value"
+      :class="[
+        'input',
+        {
+          isSearch,
+          hasLabel: !!label,
+          hasError: !!showError,
+          green,
+          orange,
+          red: red || showError,
+        },
+      ]"
       @input="$emit('input', $event.target.value, $event.target.name, $event.target.type)"
+      @keyup.enter="$emit('enter', $event.target.value, $event.target.name)"
+      @blur="onBlur"
+      :value="value"
       :placeholder="placeholder"
       :type="type"
       :autocomplete="autocomplete || (type === 'password' && 'off')"
     />
+    <div v-show="showError" class="errorMessage">{{ errorMessage }}</div>
+
     <span v-show="isSearch" class="search-button" @click="$emit('click', value)">
       Search
     </span>
@@ -65,12 +96,28 @@ export default {
       padding-right: 80px;
     }
     &.hasLabel {
-      border-radius: 0 50px 50px 50px;
+      border-top-left-radius: 0;
       margin-bottom: 16px;
+    }
+    &.hasError {
+      border: 1px solid var(--red);
+      border-bottom-right-radius: 0;
+      margin-bottom: 6px;
+    }
+    &.hasLabel.hasError {
+      border-radius: 0 20px;
     }
     &.green:focus { border: 2px solid var(--green); }
     &.orange:focus { border: 2px solid var(--orange); }
     &.red:focus { border: 2px solid var(--red); }
+  }
+  & .errorMessage {
+    height: 14px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: var(--red);
+    font-size: 13px;
   }
   & .search-button {
     position: absolute;

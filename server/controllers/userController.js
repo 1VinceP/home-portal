@@ -1,5 +1,5 @@
-import map from 'lodash/map';
-import camelCase from 'lodash/camelCase';
+const map = require('lodash/map')
+    , camelCase = require('lodash/camelCase');
 
 module.exports = {
 

@@ -40,6 +40,9 @@ export default {
   color: var(--blue);
   font-size: 16px;
   cursor: pointer;
+  &:active {
+    background: var(--blue-faded);
+  }
   &.primary {
     background: var(--blue);
     color: #fff;
