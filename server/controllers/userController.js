@@ -39,7 +39,6 @@ module.exports = {
 
       res.status( 200 ).send( users );
     } catch (error) {
-      console.log(error);
       res.status( 501 ).send( 'Your request could not be completed at this time. Please try again.' );
     }
   },
