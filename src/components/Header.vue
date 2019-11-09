@@ -19,7 +19,7 @@ export default {
 <template>
   <header>
     <div class="title">{{ title }}</div>
-    <Input v-model="search" :isSearch="true" />
+    <Input v-model="search" hasButton />
   </header>
 </template>
 

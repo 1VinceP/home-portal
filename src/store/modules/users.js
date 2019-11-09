@@ -3,12 +3,7 @@ import { User } from '@/constants/authLevel.constants';
 
 const initialState = {
   loading: false,
-  users: [
-    { name: 'Adam', password: 'bob', points: 100 },
-    { name: 'Steve', points: 200 },
-    { name: 'Jill', points: 1500 },
-    { name: 'Rachel', points: 50 },
-  ],
+  users: [],
   newUser: {
     name: '',
     password: '',
@@ -60,10 +55,11 @@ export default {
       state.users = users;
     },
 
-    editUser( state, { prop, value } ) {
-      state.user[prop] = value;
-      if (prop === 'admin' && value === true) state.newUser.manager = true;
-      if (prop === 'manager' && value === false) state.newUser.admin = false;
+    editUser( state, { id, prop, value } ) {
+      const index = state.users.findIndex(u => u.id === id);
+      state.users[index][prop] = value;
+      if (prop === 'admin' && value === true) state.users[index].manager = true;
+      if (prop === 'manager' && value === false) state.users[index].admin = false;
     },
 
     editUserSetting( state, { type, prop, value } ) {

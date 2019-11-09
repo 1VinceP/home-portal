@@ -7,6 +7,7 @@ export default {
     name: String,
     primary: Boolean,
     lg: Boolean,
+    sm: Boolean,
     green: Boolean,
     orange: Boolean,
     red: Boolean,
@@ -19,7 +20,7 @@ export default {
   <button
     :id="id"
     :name="name"
-    :class="['button', { primary, lg, green, orange, red }]"
+    :class="['button', { primary, lg, sm, green, orange, red }]"
     @click="$emit('click', $event.target.name)"
     :disabled="disabled"
   >
@@ -55,6 +56,10 @@ export default {
   &.lg {
     height: 46px;
     font-size: 18px;
+  }
+  &.sm {
+    height: 30px;
+    font-size: 14px;
   }
   &.green { color: var(--green); }
   &.orange { color: var(--orange); }

@@ -6,7 +6,7 @@ import tasksModule from './modules/tasks';
 import rewardsModule from './modules/rewards';
 import calendarModule from './modules/calendar';
 
-import { Anonymous } from '@/constants/authLevel.constants';
+import { Anonymous, User } from '@/constants/authLevel.constants';
 // import { NewFamily } from '../constants/authLevel.constants';
 
 Vue.use( Vuex );
@@ -24,12 +24,9 @@ export default new Vuex.Store({
     setAuthLevel: ( state, auth ) => {
       state.authLevel = auth;
     },
-    setFamily: ( state, { family, auth } ) => {
-      state.family = family;
-      state.authLevel = auth;
-      // if (family.users.length > 0) {
-      //   state.user = family.users[0];
-      // }
+    setUser: ( state, user ) => {
+      state.user = user;
+      state.authLevel = User;
     },
   },
 

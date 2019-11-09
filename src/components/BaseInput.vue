@@ -7,13 +7,14 @@ export default {
 
   methods: {
     onBlur() {
-      if (!this.errorMessage) return false;
+      if (!this.errorMessage || !this.errorOnBlur) return false;
       if (!this.validation) {
         console.error( 'You must provide a validation function to display an error' );
         return false;
       }
+
       this.showError = !this.validation(this.value);
-      return true;
+      return null;
     },
   },
 
@@ -25,10 +26,13 @@ export default {
     errorMessage: String,
     autocomplete: String,
     placeholder: String,
-    isSearch: Boolean,
+    buttonLabel: { type: String, default: 'Search' },
+    hasButton: Boolean,
     green: Boolean,
     orange: Boolean,
     red: Boolean,
+    isError: Boolean,
+    errorOnBlur: { type: Boolean, default: true },
     validation: Function,
   },
 };
@@ -42,9 +46,9 @@ export default {
       :class="[
         'input',
         {
-          isSearch,
+          hasButton,
           hasLabel: !!label,
-          hasError: !!showError,
+          hasError: showError || isError,
           green,
           orange,
           red: red || showError,
@@ -58,10 +62,10 @@ export default {
       :type="type"
       :autocomplete="autocomplete || (type === 'password' && 'off')"
     />
-    <div v-show="showError" class="errorMessage">{{ errorMessage }}</div>
+    <div v-show="showError || isError" class="errorMessage">{{ errorMessage }}</div>
 
-    <span v-show="isSearch" class="search-button" @click="$emit('click', value)">
-      Search
+    <span v-show="hasButton" class="search-button" @click="$emit('click', value)">
+      {{ buttonLabel }}
     </span>
   </div>
 </template>
@@ -92,7 +96,7 @@ export default {
     &:focus {
       border: 2px solid var(--blue);
     }
-    &.isSearch {
+    &.hasButton {
       padding-right: 80px;
     }
     &.hasLabel {

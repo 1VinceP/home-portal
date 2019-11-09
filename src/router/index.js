@@ -81,7 +81,6 @@ router.beforeEach(( to, from, next ) => {
       query: { redirectFrom: to.fullPath },
     });
   } else if (to.meta.protection === 'basic' && authLevel === AuthLevel.Anonymous) {
-    console.log('not a family');
     next({
       path: '/login',
       query: { redirectFrom: to.fullPath },

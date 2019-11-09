@@ -1,5 +1,5 @@
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 import ky from 'ky';
 import { Input, Button } from '@/components';
 import { NewFamily, Family } from '@/constants/authLevel.constants';
@@ -27,7 +27,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setFamily', 'setAuthLevel']),
+    ...mapMutations(['setAuthLevel']),
+    ...mapActions(['setFamily']),
 
     setValidationError() {
       this.validationError = true;

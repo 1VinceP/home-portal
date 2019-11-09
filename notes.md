@@ -4,15 +4,15 @@
 ### (1.0) Logging in
 - [ ] (1.1) `Create a new Family Account`
   - [x] Create an account and save to db
-  - [ ] New user flow
+  - [x] New user flow
     - [x] Redirect to Family page
       - [x] Without bugs
       - [x] Nav/Header shown, Nav links disabled
       - [x] Nav links still protected
-    - [ ] Create first admin user (see "(1.3) Family detail page")
-    - [ ] Receive access to all account pages
+    - [x] Create first admin user (see "(1.3) Family detail page")
+    - [x] Receive access to all account pages
   - [ ] Enhancements
-    - [ ] email/password validation
+    - [x] email/password validation
     - [ ] Login page styles
 
 - [ ] (1.2) `Login to an existing account`
@@ -20,7 +20,9 @@
     - [ ] New user flow (see "(1.1) Create a new family account")
   - [ ] Account has users
     - [ ] ?? Immediately load all family data, or page by page ??
-    - [ ] Redirect to Dashboard
+    - [x] Redirect to Family page
+      - [x] Select user and login
+      - [x] Redirect to Dashboard
 
 - [ ] (1.3) `Family detail page`
   - [ ] Display/edit current user data

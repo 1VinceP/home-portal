@@ -1,6 +1,7 @@
 <script>
 import { mapState } from 'vuex';
 import ChevronRightIcon from 'vue-material-design-icons/ChevronRight.vue';
+import { Modal } from '@/components';
 import FamilyForm from '@/components/family/FamilyForm.vue';
 import UserLogin from '@/components/family/UserLogin.vue';
 import { Family, NewFamily } from '@/constants/authLevel.constants';
@@ -10,6 +11,7 @@ export default {
     display: {},
     title: '',
     isNew: false,
+    modalOpen: false,
   }),
 
   computed: {
@@ -24,6 +26,7 @@ export default {
   beforeMount() {
     if (this.authLevel === NewFamily) {
       this.changeDisplay( 'firstUser' );
+      this.modalOpen = true;
     } else if (this.authLevel === Family) {
       this.changeDisplay( this.users[0].name );
     }
@@ -48,12 +51,25 @@ export default {
     },
   },
 
-  components: { ChevronRightIcon, FamilyForm, UserLogin },
+  components: {
+    ChevronRightIcon, FamilyForm, UserLogin, Modal,
+  },
 };
 </script>
 
 <template>
   <div class="family">
+    <Modal
+      top
+      title="Hey there!"
+      :show="modalOpen"
+      @onPrimary="modalOpen = false"
+    >
+      Looks like this is your first time here. <br />
+      Lets start by creating your first family member.
+      This person will be an Admin, and will be able to do everything.
+    </Modal>
+
     <section class="family-list">
       <div
         :key="user.id"
