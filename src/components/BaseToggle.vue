@@ -7,12 +7,6 @@ export default {
     id: null,
   }),
 
-  computed: {
-    size() {
-      return { width: `${this.width}px` };
-    },
-  },
-
   mounted() {
     this.id = uuid();
   },
@@ -20,11 +14,11 @@ export default {
   props: {
     name: String,
     label: String,
-    spacing: String,
-    width: { type: Number, default: 140 },
     checked: Boolean,
     full: Boolean,
     disabled: Boolean,
+    sm: Boolean,
+    lg: Boolean,
     green: Boolean,
     orange: Boolean,
     red: Boolean,
@@ -33,7 +27,7 @@ export default {
 </script>
 
 <template>
-<div :class="['toggle', { full, large: spacing === 'large' }]" :style="size">
+<div :class="['toggle', { full, sm, lg }]">
   <div class="label">{{ label }}</div>
   <div>
     <input
@@ -53,19 +47,14 @@ export default {
 <style lang="scss" scoped>
 .toggle {
   height: 20px;
-  // width: computed
+  width: 140px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
-  &.full {
-    width: 100%;
-    justify-content: space-between;
-  }
-  &.large {
-    width: 140px;
-    justify-content: space-between;
-  }
+  &.sm { width: 120px; }
+  &.lg { width: 160px; }
+  &.full { width: 100%; }
 }
 
 .label {
@@ -127,10 +116,6 @@ label {
   & + label {
     background: var(--grey-faded);
     cursor: default;
-    &::after {
-      height: 19px;
-      width: 19px;
-    }
   }
   &:checked {
     & + label {

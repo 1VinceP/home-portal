@@ -1,5 +1,5 @@
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import ChevronRightIcon from 'vue-material-design-icons/ChevronRight.vue';
 import { Modal } from '@/components';
 import FamilyForm from '@/components/family/FamilyForm.vue';
@@ -8,7 +8,6 @@ import { Family, NewFamily } from '@/constants/authLevel.constants';
 
 export default {
   data: () => ({
-    display: {},
     title: '',
     isNew: false,
     modalOpen: false,
@@ -16,7 +15,7 @@ export default {
 
   computed: {
     ...mapState( ['authLevel', 'user'] ),
-    ...mapState( 'users', ['users', 'newUser'] ),
+    ...mapState( 'users', ['users', 'displayedUser', 'newUser'] ),
 
     showLogin() {
       return this.authLevel === Family;
@@ -33,18 +32,20 @@ export default {
   },
 
   methods: {
+    ...mapMutations( 'users', ['setDisplayedUser'] ),
+
     changeDisplay( who ) {
       if (who === 'firstUser') {
-        this.display = this.newUser;
+        this.setDisplayedUser( this.newUser );
         this.title = 'Add yourself!';
         this.isNew = true;
       } else if (who === 'newUser') {
-        this.display = this.newUser;
+        this.setDisplayedUser( this.newUser );
         this.title = 'Add family member';
         this.isNew = true;
       } else {
         const user = this.users.find(u => u.name === who);
-        this.display = user;
+        this.setDisplayedUser( user );
         this.title = user.name;
         this.isNew = false;
       }
@@ -74,8 +75,8 @@ export default {
       <div
         :key="user.id"
         v-for="user in users"
-        :class="['user', { selected: user.name === display.name }]"
-        @click="changeDisplay(user.name)"
+        :class="['user', { selected: user.name === displayedUser.name && !isNew }]"
+        @click="changeDisplay( user.name )"
       >
         {{ user.name }}
         <ChevronRightIcon class="arrow-right" />
@@ -91,8 +92,8 @@ export default {
     </section>
 
     <section class="details">
-      <UserLogin v-if="showLogin" :displayedUser="display" />
-      <FamilyForm v-else :title="title" :displayedUser="display" :isNew="isNew" />
+      <UserLogin v-if="showLogin" />
+      <FamilyForm v-else :title="title" :isNew="isNew" />
     </section>
   </div>
 </template>

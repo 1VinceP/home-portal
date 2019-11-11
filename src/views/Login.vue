@@ -114,18 +114,36 @@ export default {
         <Input
           v-model="password"
           :placeholder="'Password'"
-          errorMessage="Password must not be empty"
           :validation="value => !!value"
+          errorMessage="Password must not be empty"
           type="password"
           @enter="loginFamily"
         />
-        <Button primary :disabled="!canLogin" @click="loginFamily">Login</Button>
+        <Button primary full :disabled="!canLogin" @click="loginFamily">Login</Button>
       </div>
       <div v-else class="inputs">
-        <Input :placeholder="'Email'" v-model="email" />
-        <Input :placeholder="'Password'" v-model="password" type="password" />
-        <Input :placeholder="'Confirm Password'" v-model="password2" type="password" />
-        <Button :disabled="!canCreate" @click="createFamily">
+        <Input
+          v-model="email"
+          :placeholder="'Email'"
+          :validation="value => !!value"
+          errorMessage="Password must not be empty"
+        />
+        <Input
+          v-model="password"
+          :placeholder="'Password'"
+          :validation="value => !!value"
+          errorMessage="Password must not be empty"
+          type="password"
+        />
+        <Input
+          v-model="password2"
+          :placeholder="'Confirm Password'"
+          :validation="value => value === password"
+          errorMessage="Passwords must match"
+          type="password"
+          @enter="createFamily"
+        />
+        <Button primary full :disabled="!canCreate" @click="createFamily">
           Create Family Account
         </Button>
       </div>

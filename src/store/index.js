@@ -14,7 +14,7 @@ Vue.use( Vuex );
 export default new Vuex.Store({
   state: {
     authLevel: Anonymous, // anonymous, new family, family, user
-    family: { id: null, users: [] },
+    family: { id: null },
     user: { id: null },
   },
 

@@ -1,5 +1,5 @@
 <script>
-import { mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import { Input } from '@/components';
 
 export default {
@@ -11,6 +11,10 @@ export default {
     attempts: 0,
     showModal: false,
   }),
+
+  computed: {
+    ...mapState( 'users', ['displayedUser'] ),
+  },
 
   methods: {
     ...mapMutations(['setUser']),
@@ -27,8 +31,6 @@ export default {
     },
   },
 
-  props: ['displayedUser'],
-
   components: { Input },
 };
 </script>
@@ -42,6 +44,7 @@ export default {
       placeholder="Password"
       errorMessage="Incorrect password"
       buttonLabel="Login"
+      type="password"
       :isError="validationFailed"
       :errorOnBlur="false"
       @click="login"

@@ -4,6 +4,7 @@ import { User } from '@/constants/authLevel.constants';
 const initialState = {
   loading: false,
   users: [],
+  displayedUser: {},
   newUser: {
     name: '',
     password: '',
@@ -15,26 +16,24 @@ const initialState = {
     rewards: [],
     events: [],
     points: 0,
-    settings: {
-      permissions: {
-        ownName: false,
-        ownPassword: false,
-        ownImage: false,
-        ownSettings: false,
-        otherName: false,
-        otherPassword: false,
-        otherPoints: false,
-        assignTasks: false,
-        assignEvents: false,
-        createTask: false,
-        editTask: false,
-        editEvent: false,
-        editReward: false,
-        createRecipe: false,
-        editRecipe: false,
-      },
-      accountSettings: {},
+    permissions: {
+      ownName: false,
+      ownPassword: false,
+      ownImage: false,
+      ownSettings: false,
+      otherName: false,
+      otherPassword: false,
+      otherPoints: false,
+      assignTasks: false,
+      assignEvents: false,
+      createTask: false,
+      editTask: false,
+      editEvent: false,
+      editReward: false,
+      createRecipe: false,
+      editRecipe: false,
     },
+    accountSettings: {},
   },
 };
 
@@ -55,6 +54,10 @@ export default {
       state.users = users;
     },
 
+    setDisplayedUser( state, user ) {
+      state.displayedUser = user;
+    },
+
     editUser( state, { id, prop, value } ) {
       const index = state.users.findIndex(u => u.id === id);
       state.users[index][prop] = value;
@@ -63,7 +66,7 @@ export default {
     },
 
     editUserSetting( state, { type, prop, value } ) {
-      state.user.settings[type][prop] = value;
+      state.user[type][prop] = value;
     },
 
     editNewUser( state, { prop, value }) {
@@ -73,13 +76,14 @@ export default {
     },
 
     editNewUserSetting( state, { type, prop, value } ) {
-      state.newUser.settings[type][prop] = value;
+      state.newUser[type][prop] = value;
     },
 
     assignAdmin( state, userType ) {
-      const permissions = { ...initialState.newUser.settings.permissions };
+      console.log('assigning admin');
+      const permissions = { ...initialState.newUser.permissions };
       Object.keys( permissions ).forEach(key => {
-        state[userType].settings.permissions[key] = true;
+        state[userType].permissions[key] = true;
       });
     },
   },
@@ -90,6 +94,7 @@ export default {
 
       const res = await ky.post( '/family/users', { json: { user } } ).json();
       commit( 'setAuthLevel', User, { root: true } );
+      commit( 'setUser', user, { root: true } );
       commit( 'setUsers', res );
 
       return true;

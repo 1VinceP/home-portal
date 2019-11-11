@@ -3,16 +3,24 @@ import { mapMutations, mapState, mapActions } from 'vuex';
 import {
   Button, Collapsible, Input, Toggle,
 } from '@/components';
+import { NewFamily } from '@/constants/authLevel.constants';
 
 export default {
   name: 'family-form',
   data: () => ({}),
 
   computed: {
-    ...mapState(['user', 'authLevel']),
+    ...mapState( ['user', 'authLevel'] ),
+    ...mapState( 'users', ['displayedUser'] ),
+
+    showAuthToggles() {
+      return (this.user.admin && this.user.id !== this.displayedUser.id)
+        || this.authLevel === NewFamily || this.isNew;
+    },
 
     showPermissions() {
-      return !this.isNew && this.displayedUser.admin && this.user.id !== this.displayedUser.id;
+      return (this.user.admin && this.user.id !== this.displayedUser.id)
+        && this.authLevel !== NewFamily;
     },
 
     canSave() {
@@ -28,7 +36,7 @@ export default {
   },
 
   mounted() {
-    if (this.isNew) {
+    if (this.authLevel === NewFamily) {
       this.editNewUser({ prop: 'admin', value: true });
       this.editNewUser({ prop: 'manager', value: true });
       this.assignAdmin( 'newUser' );
@@ -61,33 +69,35 @@ export default {
     Button, Collapsible, Input, Toggle,
   },
 
-  props: ['displayedUser', 'isNew', 'title'],
+  props: ['isNew', 'title'],
 };
 </script>
 
 <template>
   <div class="family-form">
     <section class="grid">
-      <div class="title">{{ title }}</div>
+      <div class="title">{{ title || displayedUser.name }}</div>
       <div class="grid-toggle">
         <Toggle
-          v-show="showPermissions || isNew"
+          sm
+          v-show="showAuthToggles"
           name="admin"
           label="Admin"
           :checked="displayedUser.admin"
           @change="edit"
-          :disabled="isNew"
+          :disabled="!this.user.admin"
           red
         />
       </div>
       <div class="grid-toggle">
         <Toggle
-          v-show="showPermissions || isNew"
+          sm
+          v-show="showAuthToggles"
           name="manager"
           label="Manager"
           :checked="displayedUser.manager"
           @change="edit"
-          :disabled="isNew"
+          :disabled="!this.user.admin"
           red
         />
       </div>
@@ -101,6 +111,7 @@ export default {
         <Input
           name="password"
           label="Password"
+          type="password"
           :value="displayedUser.password"
           @input="edit"
           autocomplete="off"
@@ -125,7 +136,7 @@ export default {
       v-show="showPermissions"
       label="Permissions"
       subtitle="Can edit self"
-      :cols="3"
+      :cols="4"
       red
     >
       <div class="grid-toggle"><Toggle red label="Name" /></div>

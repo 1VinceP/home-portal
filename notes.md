@@ -120,13 +120,11 @@
   rewards: Array, // list of purchased rewards
   events: Array, // list of calendar events related to this user
   points: Number, // quantity of accumulated points
-  settings: {
-    permissions: { // only modifiable by Admin
-      canEditSelf: Array, // list of own properties this user can edit
-      canEditChild: Array, // list of child user properties this user can edit
-    },
-    accountSettings: Object,
+  permissions: { // only modifiable by Admin
+    canEditSelf: Array, // list of own properties this user can edit
+    canEditChild: Array, // list of child user properties this user can edit
   },
+  accountSettings: Object,
   meta: {
     createdOn: Date,
     createdBy: String, // relates to userId

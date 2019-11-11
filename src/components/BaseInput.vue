@@ -1,11 +1,24 @@
 <script>
+import EyeIcon from 'vue-material-design-icons/Eye.vue';
+import EyeOffIcon from 'vue-material-design-icons/EyeOff.vue';
+import { Button } from '@/components';
+
 export default {
   name: 'base-input',
   data: () => ({
     showError: false,
+    maskText: false,
   }),
 
+  mounted() {
+    if (this.type === 'password') this.maskText = true;
+  },
+
   methods: {
+    changeMask() {
+      this.maskText = !this.maskText;
+    },
+
     onBlur() {
       if (!this.errorMessage || !this.errorOnBlur) return false;
       if (!this.validation) {
@@ -17,6 +30,8 @@ export default {
       return null;
     },
   },
+
+  components: { Button, EyeIcon, EyeOffIcon },
 
   props: {
     label: String,
@@ -46,7 +61,8 @@ export default {
       :class="[
         'input',
         {
-          hasButton,
+          hasButton: hasButton || type === 'password',
+          hasIcons: type === 'password',
           hasLabel: !!label,
           hasError: showError || isError,
           green,
@@ -59,14 +75,23 @@ export default {
       @blur="onBlur"
       :value="value"
       :placeholder="placeholder"
-      :type="type"
+      :type="(type === 'password' && maskText) && 'password'"
       :autocomplete="autocomplete || (type === 'password' && 'off')"
     />
     <div v-show="showError || isError" class="errorMessage">{{ errorMessage }}</div>
 
-    <span v-show="hasButton" class="search-button" @click="$emit('click', value)">
-      {{ buttonLabel }}
+    <span v-show="hasButton || type === 'password'" class="accessories">
+      <Button v-show="hasButton" @click="$emit('click', value)">
+        {{ buttonLabel }}
+      </Button>
+      <span v-show="type === 'password'" class="icons" @click="changeMask">
+        <EyeIcon v-if="maskText" />
+        <EyeOffIcon v-else />
+      </span>
     </span>
+    <!-- <span v-show="hasButton" class="search-button" @click="$emit('click', value)">
+      {{ buttonLabel }}
+    </span> -->
   </div>
 </template>
 
@@ -99,6 +124,9 @@ export default {
     &.hasButton {
       padding-right: 80px;
     }
+    &.hasIcons {
+      padding-right: 90px;
+    }
     &.hasLabel {
       border-top-left-radius: 0;
       margin-bottom: 16px;
@@ -123,13 +151,19 @@ export default {
     color: var(--red);
     font-size: 13px;
   }
-  & .search-button {
+  & .accessories {
+    height: 100%;
+    display: flex;
+    align-items: center;
     position: absolute;
-    right: 16px;
-    top: 10px;
-    color: var(--blue);
-    font-size: 18px;
-    cursor: pointer;
+    right: 0px;
+    & .icons {
+      padding-top: 4px;
+      margin-right: 8px;
+      margin-left: -6px;
+      color: var(--grey);
+      cursor: pointer;
+    }
   }
 }
 </style>

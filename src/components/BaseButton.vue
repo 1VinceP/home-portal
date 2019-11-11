@@ -6,6 +6,7 @@ export default {
     id: String,
     name: String,
     primary: Boolean,
+    full: Boolean,
     lg: Boolean,
     sm: Boolean,
     green: Boolean,
@@ -20,7 +21,7 @@ export default {
   <button
     :id="id"
     :name="name"
-    :class="['button', { primary, lg, sm, green, orange, red }]"
+    :class="['button', { primary, full, lg, sm, green, orange, red }]"
     @click="$emit('click', $event.target.name)"
     :disabled="disabled"
   >
@@ -52,6 +53,9 @@ export default {
       background: var(--grey);
       color: #fff;
     }
+  }
+  &.full {
+    width: 100%;
   }
   &.lg {
     height: 46px;
