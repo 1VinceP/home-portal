@@ -48,7 +48,8 @@ export default {
   &.primary {
     background: var(--blue);
     color: #fff;
-    &:active { background: var(--navy); }
+    &:hover { background: #1ebdfc; }
+    &:active { background: var(--blue); }
     &[disabled] {
       background: var(--grey);
       color: #fff;
@@ -65,9 +66,36 @@ export default {
     height: 30px;
     font-size: 14px;
   }
-  &.green { color: var(--green); }
-  &.orange { color: var(--orange); }
-  &.red { color: var(--red); }
+  &.green {
+    background: var(--green);
+    color: #fff;
+    &:hover { background: #17ae67; }
+    &:active { background: var(--green); }
+    &[disabled] {
+      background: var(--grey);
+      color: #fff;
+    }
+  }
+  &.orange {
+    background: var(--orange);
+    color: #fff;
+    &:hover { background: #ff9100; }
+    &:active { background: var(--orange); }
+    &[disabled] {
+      background: var(--grey);
+      color: #fff;
+    }
+  }
+  &.red {
+    background: var(--red);
+    color: #fff;
+    &:hover { background: #db4256; }
+    &:active { background: var(--red); }
+    &[disabled] {
+      background: var(--grey);
+      color: #fff;
+    }
+  }
   &[disabled] {
     color: var(--grey);
     cursor: default;

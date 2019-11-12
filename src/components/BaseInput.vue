@@ -54,7 +54,12 @@ export default {
 </script>
 
 <template>
-  <div class="input-container">
+  <div
+    :class="[
+      'input-container',
+      { hasLabel: !!label, hasError: showError || isError }
+    ]"
+  >
     <div v-show="label" class="label">{{ label }}</div>
     <input
       :name="name"
@@ -85,13 +90,10 @@ export default {
         {{ buttonLabel }}
       </Button>
       <span v-show="type === 'password'" class="icons" @click="changeMask">
-        <EyeIcon v-if="maskText" />
-        <EyeOffIcon v-else />
+        <EyeOffIcon v-if="maskText" />
+        <EyeIcon v-else />
       </span>
     </span>
-    <!-- <span v-show="hasButton" class="search-button" @click="$emit('click', value)">
-      {{ buttonLabel }}
-    </span> -->
   </div>
 </template>
 
@@ -102,10 +104,16 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
+  margin: 20px 0;
+  &.hasLabel { margin-top: 30px; }
+  &.hasError { margin-bottom: 30px; }
   & .label {
-    height: 20px;
+    // height: 20px;
     display: flex;
     align-items: center;
+    position: absolute;
+    top: -16px;
+    left: 0px;
     font-size: 14px;
     color: var(--navy);
   }
@@ -125,16 +133,14 @@ export default {
       padding-right: 80px;
     }
     &.hasIcons {
-      padding-right: 90px;
+      padding-right: 100px;
     }
     &.hasLabel {
       border-top-left-radius: 0;
-      margin-bottom: 16px;
     }
     &.hasError {
       border: 1px solid var(--red);
       border-bottom-right-radius: 0;
-      margin-bottom: 6px;
     }
     &.hasLabel.hasError {
       border-radius: 0 20px;
@@ -142,14 +148,6 @@ export default {
     &.green:focus { border: 2px solid var(--green); }
     &.orange:focus { border: 2px solid var(--orange); }
     &.red:focus { border: 2px solid var(--red); }
-  }
-  & .errorMessage {
-    height: 14px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    color: var(--red);
-    font-size: 13px;
   }
   & .accessories {
     height: 100%;
@@ -159,11 +157,22 @@ export default {
     right: 0px;
     & .icons {
       padding-top: 4px;
-      margin-right: 8px;
+      margin-right: 16px;
       margin-left: -6px;
       color: var(--grey);
       cursor: pointer;
     }
+  }
+  & .errorMessage {
+    // height: 14px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: absolute;
+    right: 0px;
+    bottom: -16px;
+    color: var(--red);
+    font-size: 13px;
   }
 }
 </style>

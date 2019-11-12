@@ -1,5 +1,6 @@
-const bcrypt = require('bcrypt');
-const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS);
+const bcrypt = require( 'bcrypt' );
+const camelCaseKeys = require( '../helpers/camelCaseKeys' );
+const saltRounds = Number( process.env.BCRYPT_SALT_ROUNDS );
 
 const offlineFamily = [{
   name: 'Offline Family',
@@ -13,7 +14,6 @@ const offlineFamily = [{
 }];
 
 module.exports = {
-
   createFamily: async ( req, res ) => {
     const { name, email, password } = req.body;
 
@@ -49,6 +49,15 @@ module.exports = {
         const tasks = await req.app.get('db').tasks.getTasksByFamily({ familyId: response.id });
         const users = await req.app.get('db').users.getUsersByFamily({ familyId: response.id });
 
+        await Promise.all(
+          users.map(async user => {
+            const [perms] = await req.app.get('db').users.getUserPermissions({ userId: user.id });
+            const { id, user_id, ...permissions } = perms;
+            user.permissions = camelCaseKeys( permissions );
+            return user;
+          }),
+        );
+
         const family = {
           ...response,
           // calendar,
@@ -65,5 +74,4 @@ module.exports = {
       res.status(404).send({ message: `No users with the email, "${email}", were found` });
     }
   },
-
 };

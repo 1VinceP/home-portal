@@ -44,7 +44,13 @@ export default {
   },
 
   methods: {
-    ...mapMutations( 'users', ['editUser', 'editNewUser', 'assignAdmin'] ),
+    ...mapMutations('users', [
+      'editUser',
+      'editUserSetting',
+      'editNewUser',
+      'editNewUserSetting',
+      'assignAdmin',
+    ]),
     ...mapActions( 'users', ['createUser'] ),
 
     edit( value, prop, type ) {
@@ -54,6 +60,14 @@ export default {
         this.editNewUser({ prop, value: v });
       } else {
         this.editUser({ prop, value: v });
+      }
+    },
+
+    editPermission( value, prop ) {
+      if (this.isNew) {
+        this.editNewUserSetting({ type: 'permissions', prop, value });
+      } else {
+        this.editUserSetting({ type: 'permissions', prop, value });
       }
     },
 
@@ -139,10 +153,42 @@ export default {
       :cols="4"
       red
     >
-      <div class="grid-toggle"><Toggle red label="Name" /></div>
-      <div class="grid-toggle"><Toggle red label="Password" /></div>
-      <div class="grid-toggle"><Toggle red label="Image" /></div>
-      <div class="grid-toggle"><Toggle red label="Settings" /></div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Name"
+          name="ownName"
+          :checked="displayedUser.permissions.ownName"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Password"
+          name="ownPassword"
+          :checked="displayedUser.permissions.ownPassword"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Image"
+          name="ownImage"
+          :checked="displayedUser.permissions.ownImage"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Settings"
+          name="ownSettings"
+          :checked="displayedUser.permissions.ownSettings"
+          @change="editPermission"
+        />
+      </div>
     </Collapsible>
 
     <Collapsible
@@ -152,11 +198,51 @@ export default {
       :cols="3"
       red
     >
-      <div class="grid-toggle"><Toggle red label="Name" /></div>
-      <div class="grid-toggle"><Toggle red label="Password" /></div>
-      <div class="grid-toggle"><Toggle red label="Points" /></div>
-      <div class="grid-toggle"><Toggle red label="Assign Tasks" /></div>
-      <div class="grid-toggle"><Toggle red label="Assign Events" /></div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Name"
+          name="otherName"
+          :checked="displayedUser.permissions.otherName"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Password"
+          name="otherPassword"
+          :checked="displayedUser.permissions.otherPassword"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Points"
+          name="otherPoints"
+          :checked="displayedUser.permissions.otherPoints"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Assign Tasks"
+          name="assignTasks"
+          :checked="displayedUser.permissions.assignTasks"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Assign Events"
+          name="assignEvents"
+          :checked="displayedUser.permissions.assignEvents"
+          @change="editPermission"
+        />
+      </div>
     </Collapsible>
 
     <Collapsible

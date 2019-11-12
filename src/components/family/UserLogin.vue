@@ -61,9 +61,6 @@ export default {
   flex-direction: column;
   align-items: center;
   padding-top: 120px;
-  & h1 {
-    margin-bottom: 30px;
-    font-size: 24px;
-  }
+  font-size: 24px;
 }
 </style>
