@@ -2,7 +2,8 @@
 
 ## User Stories
 ### (1.0) Logging in
-- [ ] (1.1) `Create a new Family Account`
+<!--
+- [x] (1.1) `Create a new Family Account`
   - [x] Create an account and save to db
   - [x] New user flow
     - [x] Redirect to Family page
@@ -11,15 +12,18 @@
       - [x] Nav links still protected
     - [x] Create first admin user (see "(1.3) Family detail page")
     - [x] Receive access to all account pages
-  - [ ] Enhancements
+  - [x] Enhancements
     - [x] email/password validation
-    - [ ] Login page styles
+    - [x] Login page styles
+-->
 
-- [ ] (1.2) `Login to an existing account`
-  - [ ] Account has no users
-    - [ ] New user flow (see "(1.1) Create a new family account")
-  - [ ] Account has users
-    - [ ] ?? Immediately load all family data, or page by page ??
+- [x] (1.2) `Login to an existing account`
+  - [x] Account has no users
+    - [x] New user flow (see "(1.1) Create a new family account")
+  - [x] Account has users
+    - [x] Immediately load all users with permissions
+      - [x] Top level
+      - [x] Permissions
     - [x] Redirect to Family page
       - [x] Select user and login
       - [x] Redirect to Dashboard
@@ -27,12 +31,26 @@
 - [ ] (1.3) `Family detail page`
   - [ ] Display/edit current user data
     - [ ] Child user can maybe edit self
-  - [ ] Display list of users
+    - [ ] Delete user
+  - [x] Create User
+  - [x] Display list of users
   - [ ] Display/edit other user data
     - [ ] Admin/manager/child permissions
       - [ ] Admin can edit all
       - [ ] Manager can edit some
       - [ ] Child can maybe edit self
+  - [ ] Mobile friendly
+
+### 2.0 Tasks
+- [ ] (2.1) `Display tasks`
+  - [ ] Get all tasks by user
+    - [ ] Display user tasks on Family page
+  - [ ] Display all tasks on Tasks page
+
+- [ ] (2.2) `REST tasks`
+  - [ ] Create tasks
+  - [ ] Edit tasks
+  - [ ] Delete tasks
 
 
 

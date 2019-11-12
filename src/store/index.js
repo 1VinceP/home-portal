@@ -6,21 +6,27 @@ import tasksModule from './modules/tasks';
 import rewardsModule from './modules/rewards';
 import calendarModule from './modules/calendar';
 
-import { Anonymous, User } from '@/constants/authLevel.constants';
-// import { NewFamily } from '../constants/authLevel.constants';
+import { Anonymous, Family, User } from '@/constants/authLevel.constants';
 
 Vue.use( Vuex );
 
+const initialState = () => ({
+  authLevel: Anonymous, // anonymous, new family, family, user
+  family: { id: null },
+  user: { id: null },
+});
+
 export default new Vuex.Store({
-  state: {
-    authLevel: Anonymous, // anonymous, new family, family, user
-    family: { id: null },
-    user: { id: null },
-  },
+  state: initialState,
 
   getters: {},
 
   mutations: {
+    reset: ( state ) => {
+      const s = initialState();
+      Object.keys(s).forEach( key => { state[key] = s[key]; } );
+    },
+
     setAuthLevel: ( state, auth ) => {
       state.authLevel = auth;
     },
@@ -41,6 +47,11 @@ export default new Vuex.Store({
       commit( 'rewards/setRewards', rewards, { root: true } );
       commit( 'tasks/setTasks', tasks, { root: true } );
       commit( 'users/setUsers', users, { root: true } );
+    },
+
+    signoutUser: ({ commit }) => {
+      commit( 'setUser', { id: null } );
+      commit( 'setAuthLevel', Family );
     },
   },
 

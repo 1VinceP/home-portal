@@ -12,6 +12,9 @@ export default {
 
   mounted() {
     if (this.type === 'password') this.maskText = true;
+    if (this.autofocus) {
+      this.$nextTick( () => this.$refs.input.focus() );
+    }
   },
 
   methods: {
@@ -42,6 +45,7 @@ export default {
     autocomplete: String,
     placeholder: String,
     buttonLabel: { type: String, default: 'Search' },
+    autofocus: Boolean,
     hasButton: Boolean,
     green: Boolean,
     orange: Boolean,
@@ -62,6 +66,7 @@ export default {
   >
     <div v-show="label" class="label">{{ label }}</div>
     <input
+      ref="input"
       :name="name"
       :class="[
         'input',

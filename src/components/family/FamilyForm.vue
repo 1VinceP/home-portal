@@ -1,26 +1,36 @@
 <script>
 import { mapMutations, mapState, mapActions } from 'vuex';
 import {
-  Button, Collapsible, Input, Toggle,
+  Button, Collapsible, Input, Toggle, Modal,
 } from '@/components';
 import { NewFamily } from '@/constants/authLevel.constants';
 
 export default {
   name: 'family-form',
-  data: () => ({}),
+  data: () => ({
+    showDeleteModal: false,
+  }),
 
   computed: {
     ...mapState( ['user', 'authLevel'] ),
-    ...mapState( 'users', ['displayedUser'] ),
+    ...mapState( 'users', ['displayedUser', 'newUser', 'userChangesMade'] ),
 
     showAuthToggles() {
       return (this.user.admin && this.user.id !== this.displayedUser.id)
         || this.authLevel === NewFamily || this.isNew;
     },
 
+    autocheckAuthToggles() {
+      return this.authLevel === NewFamily;
+    },
+
     showPermissions() {
       return (this.user.admin && this.user.id !== this.displayedUser.id)
         && this.authLevel !== NewFamily;
+    },
+
+    showDelete() {
+      return this.user.admin && !this.displayedUser.admin && !this.isNew;
     },
 
     canSave() {
@@ -29,9 +39,20 @@ export default {
         || (this.user.id === this.displayedUser.id);
     },
 
-    validated() {
-      return !!this.displayedUser.name
-        && !!this.displayedUser.password;
+    userValidated() {
+      return !!this.displayedUser.name && !!this.displayedUser.password
+        && this.userChangesMade;
+    },
+
+    newUserValidated() {
+      return !!this.newUser.name && !!this.newUser.password;
+    },
+
+    saveButtonSpecs() {
+      return {
+        label: this.isNew ? 'Create' : 'Update',
+        disabled: this.isNew ? !this.newUserValidated : !this.userValidated,
+      };
     },
   },
 
@@ -39,7 +60,6 @@ export default {
     if (this.authLevel === NewFamily) {
       this.editNewUser({ prop: 'admin', value: true });
       this.editNewUser({ prop: 'manager', value: true });
-      this.assignAdmin( 'newUser' );
     }
   },
 
@@ -49,9 +69,8 @@ export default {
       'editUserSetting',
       'editNewUser',
       'editNewUserSetting',
-      'assignAdmin',
     ]),
-    ...mapActions( 'users', ['createUser'] ),
+    ...mapActions( 'users', ['createUser', 'updateUser', 'deleteUser'] ),
 
     edit( value, prop, type ) {
       let v = value;
@@ -71,24 +90,48 @@ export default {
       }
     },
 
-    async saveUser() {
-      if (this.validated) {
-        const isCreated = await this.createUser();
-        if (isCreated) this.$router.push( '/dashboard' );
+    saveUser() {
+      if (this.newUserValidated && this.isNew) {
+        this.createUser( this.authLevel );
+        this.resetIsNew();
+      } else if (this.userValidated) {
+        this.updateUser();
       }
+    },
+
+    deleteUserMethod() {
+      this.deleteUser();
+      this.showDeleteModal = false;
     },
   },
 
   components: {
-    Button, Collapsible, Input, Toggle,
+    Button, Collapsible, Input, Toggle, Modal,
   },
 
-  props: ['isNew', 'title'],
+  props: {
+    title: String,
+    isNew: Boolean,
+    resetIsNew: Function,
+  },
 };
 </script>
 
 <template>
   <div class="family-form">
+    <Modal
+      :show="showDeleteModal"
+      :title="`Delete ${displayedUser.name}?`"
+      type="error"
+      secondary="Cancel"
+      primary="Delete"
+      @onSecondary="showDeleteModal = false"
+      @onPrimary="deleteUserMethod"
+    >
+      This action cannot be undone. <br />
+      Are you sure you want to permanently delete {{ displayedUser.name }}?
+    </Modal>
+
     <section class="grid">
       <div class="title">{{ title || displayedUser.name }}</div>
       <div class="grid-toggle">
@@ -97,7 +140,7 @@ export default {
           v-show="showAuthToggles"
           name="admin"
           label="Admin"
-          :checked="displayedUser.admin"
+          :checked="displayedUser.admin || autocheckAuthToggles"
           @change="edit"
           :disabled="!this.user.admin"
           red
@@ -109,7 +152,7 @@ export default {
           v-show="showAuthToggles"
           name="manager"
           label="Manager"
-          :checked="displayedUser.manager"
+          :checked="displayedUser.manager || autocheckAuthToggles"
           @change="edit"
           :disabled="!this.user.admin"
           red
@@ -159,6 +202,7 @@ export default {
           label="Name"
           name="ownName"
           :checked="displayedUser.permissions.ownName"
+          :disabled="displayedUser.admin"
           @change="editPermission"
         />
       </div>
@@ -168,6 +212,7 @@ export default {
           label="Password"
           name="ownPassword"
           :checked="displayedUser.permissions.ownPassword"
+          :disabled="displayedUser.admin"
           @change="editPermission"
         />
       </div>
@@ -177,6 +222,7 @@ export default {
           label="Image"
           name="ownImage"
           :checked="displayedUser.permissions.ownImage"
+          :disabled="displayedUser.admin"
           @change="editPermission"
         />
       </div>
@@ -186,6 +232,7 @@ export default {
           label="Settings"
           name="ownSettings"
           :checked="displayedUser.permissions.ownSettings"
+          :disabled="displayedUser.admin"
           @change="editPermission"
         />
       </div>
@@ -204,6 +251,7 @@ export default {
           label="Name"
           name="otherName"
           :checked="displayedUser.permissions.otherName"
+          :disabled="displayedUser.admin"
           @change="editPermission"
         />
       </div>
@@ -213,6 +261,7 @@ export default {
           label="Password"
           name="otherPassword"
           :checked="displayedUser.permissions.otherPassword"
+          :disabled="displayedUser.admin"
           @change="editPermission"
         />
       </div>
@@ -222,6 +271,7 @@ export default {
           label="Points"
           name="otherPoints"
           :checked="displayedUser.permissions.otherPoints"
+          :disabled="displayedUser.admin"
           @change="editPermission"
         />
       </div>
@@ -230,7 +280,8 @@ export default {
           red
           label="Assign Tasks"
           name="assignTasks"
-          :checked="displayedUser.permissions.assignTasks"
+          :checked="displayedUser.permissions.assignTask"
+          :disabled="displayedUser.admin"
           @change="editPermission"
         />
       </div>
@@ -239,7 +290,8 @@ export default {
           red
           label="Assign Events"
           name="assignEvents"
-          :checked="displayedUser.permissions.assignEvents"
+          :checked="displayedUser.permissions.assignEvent"
+          :disabled="displayedUser.admin"
           @change="editPermission"
         />
       </div>
@@ -261,7 +313,10 @@ export default {
     </Collapsible>
 
     <section v-show="canSave" class="footer">
-      <Button primary @click="saveUser" :disabled="!validated">Save</Button>
+      <Button v-show="showDelete" red class="delete" @click="showDeleteModal = true">Delete</Button>
+      <Button primary @click="saveUser" :disabled="saveButtonSpecs.disabled">
+        {{ saveButtonSpecs.label }}
+      </Button>
     </section>
   </div>
 </template>
@@ -315,5 +370,8 @@ export default {
   justify-content: flex-end;
   margin-top: 36px;
   padding: 0 30px;
+  & .delete {
+    margin-right: 30px;
+  }
 }
 </style>

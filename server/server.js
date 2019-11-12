@@ -35,7 +35,7 @@ massive( process.env.DATABASE_URI ).then(db => {
   app.get( 'db' ).init.seed()
     .catch( res => console.log( res ) );
   listen();
-}).catch(error => {
+}).catch(() => {
   console.log( chalk.red( 'Could not connect to Database' ) );
   listen();
 });
@@ -47,6 +47,8 @@ app.post( '/auth/family/login', authController.loginFamily );
 
 // Users
 app.post( '/family/users', authValidation, userController.createUser );
+app.put( '/family/users', authValidation, userController.updateUser );
+app.delete( '/family/users/:id', authValidation, userController.deleteUser );
 
 
 

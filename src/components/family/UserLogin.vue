@@ -39,6 +39,7 @@ export default {
   <div class="user-login">
     <h1>{{ displayedUser.name }}</h1>
     <Input
+      autofocus
       hasButton
       v-model="password"
       placeholder="Password"

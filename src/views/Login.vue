@@ -106,6 +106,7 @@ export default {
       <header>Title</header>
       <div v-if="loginOrCreate === 'login'" class="inputs">
         <Input
+          autofocus
           v-model="email"
           :placeholder="'Email'"
           errorMessage="Email must not be empty"

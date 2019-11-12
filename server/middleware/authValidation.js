@@ -1,5 +1,5 @@
 module.exports = ( req, res, next ) => {
-  const { session, params } = req;
+  const { session } = req;
   if (session.familyId) {
     next();
   } else {

@@ -25,11 +25,11 @@ const routes = [
       const { state: { authLevel } } = store;
       switch (authLevel) {
         case AuthLevel.User:
-          next('/dashboard');
+          next( '/dashboard' );
           break;
         case AuthLevel.NewFamily:
         case AuthLevel.Family:
-          next('/family');
+          next( '/family' );
           break;
         default:
           next();
@@ -75,11 +75,15 @@ router.beforeEach(( to, from, next ) => {
   const { state: { authLevel } } = store;
 
   if (to.meta.protection === 'full' && authLevel !== AuthLevel.User) {
-    console.log( 'not authenticated' );
-    next({
-      path: '/login',
-      query: { redirectFrom: to.fullPath },
-    });
+    if (authLevel === AuthLevel.Family || authLevel === AuthLevel.NewFamily) {
+      next( '/family' );
+    } else {
+      console.log( 'not authenticated' );
+      next({
+        path: '/login',
+        query: { redirectFrom: to.fullPath },
+      });
+    }
   } else if (to.meta.protection === 'basic' && authLevel === AuthLevel.Anonymous) {
     next({
       path: '/login',

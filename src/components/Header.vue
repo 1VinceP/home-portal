@@ -1,6 +1,8 @@
 <script>
+import { mapState, mapActions } from 'vuex';
 import startCase from 'lodash/startCase';
 import { Input } from '@/components';
+import { User } from '@/constants/authLevel.constants';
 
 export default {
   name: 'base-header',
@@ -9,7 +11,17 @@ export default {
   }),
 
   computed: {
+    ...mapState( ['authLevel', 'user'] ),
+    showRight() { return this.authLevel === User; },
     title() { return startCase(this.$route.name); },
+  },
+
+  methods: {
+    ...mapActions( ['signoutUser'] ),
+    signout() {
+      this.signoutUser();
+      this.$router.push( '/family' );
+    },
   },
 
   components: { Input },
@@ -19,7 +31,15 @@ export default {
 <template>
   <header>
     <div class="title">{{ title }}</div>
-    <Input v-model="search" hasButton />
+    <span v-show="showRight" class="right">
+      <Input v-model="search" hasButton />
+      <div
+        :class="['user', { admin: user.admin, manager: user.manager }]"
+        @click="signout"
+      >
+        {{ user.name }}
+      </div>
+    </span>
   </header>
 </template>
 
@@ -39,5 +59,25 @@ header {
   padding-left: 16px;
   font-size: 36px;
   color: var(--navy);
+}
+
+.right {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  & .user {
+    height: 100%;
+    background: var(--green);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 16px;
+    padding: 0 10px;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    &.manager { background: var(--orange); }
+    &.admin { background: var(--red); }
+  }
 }
 </style>

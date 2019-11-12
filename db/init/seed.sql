@@ -81,8 +81,8 @@ CREATE TABLE User_permissions (
   , other_name     BOOLEAN
   , other_password BOOLEAN
   , other_points   BOOLEAN
-  , assign_tasks   BOOLEAN
-  , assign_events  BOOLEAN
+  , assign_task    BOOLEAN
+  , assign_event   BOOLEAN
   , create_task    BOOLEAN
   , edit_task      BOOLEAN
   , edit_event     BOOLEAN

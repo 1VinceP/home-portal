@@ -71,7 +71,9 @@ export default {
         <Button
           primary
           sm
-          class="primary"
+          :green="type === 'success'"
+          :orange="type === 'warning'"
+          :red="type === 'error'"
           @click="$emit('onPrimary', inputValue)"
         >
           {{ primary }}
@@ -126,12 +128,15 @@ export default {
     border-color: var(--red);
   }
   & .bar {
-    height: 40px;
+    height: 60px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 16px;
+  }
+  & .head {
+    font-size: 18px;
   }
   & .body {
     display: flex;
@@ -140,7 +145,7 @@ export default {
     align-items: center;
     padding: 8px 16px;
     text-align: left;
-    line-height: 116%;
+    line-height: 124%;
     & .prompt {
       margin-top: 16px;
     }

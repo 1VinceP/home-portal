@@ -1,10 +1,13 @@
 import ky from 'ky';
-import { User } from '@/constants/authLevel.constants';
+// eslint-disable-next-line import/no-cycle
+import router from '@/router';
+import { User, NewFamily } from '@/constants/authLevel.constants';
 
-const initialState = {
+const initialState = () => ({
   loading: false,
   users: [],
   displayedUser: {},
+  userChangesMade: false,
   newUser: {
     name: '',
     password: '',
@@ -24,8 +27,8 @@ const initialState = {
       otherName: false,
       otherPassword: false,
       otherPoints: false,
-      assignTasks: false,
-      assignEvents: false,
+      assignTask: false,
+      assignEvent: false,
       createTask: false,
       editTask: false,
       editEvent: false,
@@ -35,7 +38,7 @@ const initialState = {
     },
     accountSettings: {},
   },
-};
+});
 
 export default {
   namespaced: true,
@@ -46,8 +49,12 @@ export default {
 
   mutations: {
     reset( state ) {
-      const s = initialState;
+      const s = initialState();
       Object.keys( s ).forEach( key => { state[key] = s[key]; } );
+    },
+
+    resetNewUser( state ) {
+      state.newUser = initialState().newUser;
     },
 
     setUsers( state, users ) {
@@ -55,18 +62,20 @@ export default {
     },
 
     setDisplayedUser( state, user ) {
-      state.displayedUser = user;
+      state.displayedUser = { ...user };
+      state.userChangesMade = false;
     },
 
-    editUser( state, { id, prop, value } ) {
-      const index = state.users.findIndex(u => u.id === id);
-      state.users[index][prop] = value;
-      if (prop === 'admin' && value === true) state.users[index].manager = true;
-      if (prop === 'manager' && value === false) state.users[index].admin = false;
+    editUser( state, { prop, value } ) {
+      state.displayedUser[prop] = value;
+      state.userChangesMade = true;
+      if (prop === 'admin' && value === true) state.displayedUser.manager = true;
+      if (prop === 'manager' && value === false) state.displayedUser.admin = false;
     },
 
     editUserSetting( state, { type, prop, value } ) {
-      state.user[type][prop] = value;
+      state.displayedUser[type][prop] = value;
+      state.userChangesMade = true;
     },
 
     editNewUser( state, { prop, value }) {
@@ -79,9 +88,9 @@ export default {
       state.newUser[type][prop] = value;
     },
 
-    assignAdmin( state, userType ) {
+    assignAdminPerms( state, userType ) {
       console.log('assigning admin');
-      const permissions = { ...initialState.newUser.permissions };
+      const permissions = initialState().newUser.permissions;
       Object.keys( permissions ).forEach(key => {
         state[userType].permissions[key] = true;
       });
@@ -89,19 +98,40 @@ export default {
   },
 
   actions: {
-    async createUser( { state, commit } ) {
+    async createUser( { state, rootState, commit }, oldAuth ) {
       const { newUser: user } = state;
+      if (user.admin) commit( 'assignAdminPerms', 'newUser' );
 
-      const res = await ky.post( '/family/users', { json: { user } } ).json();
-      commit( 'setAuthLevel', User, { root: true } );
-      commit( 'setUser', user, { root: true } );
-      commit( 'setUsers', res );
+      const users = await ky.post( '/family/users', { json: { user } } ).json();
+      commit( 'setUsers', users );
+      commit( 'resetNewUser' );
+      if (rootState.authLevel === NewFamily) {
+        commit( 'setAuthLevel', User, { root: true } );
+        commit( 'setUser', users[0], { root: true } );
+      } else {
+        commit( 'setDisplayedUser', users[users.length - 1] );
+      }
 
-      return true;
+      if (oldAuth === NewFamily) router.push( '/dashboard' );
     },
 
-    async updateUser( { commit }, user ) {
-      if (user.admin) commit( 'users/assignAdmin' );
+    async updateUser( { state, commit } ) {
+      const { displayedUser: user } = state;
+
+      if (user.admin) commit( 'assignAdminPerms', 'displayedUser' );
+
+      const users = await ky.put( '/family/users', { json: { user } } ).json();
+      commit( 'setUsers', users );
+      state.userChangesMade = false;
+    },
+
+    async deleteUser( { state, rootState, commit } ) {
+      const { displayedUser: user } = state;
+
+      const users = await ky.delete( `/family/users/${user.id}` ).json();
+
+      commit( 'setUsers', users );
+      commit( 'setDisplayedUser', rootState.user );
     },
   },
 };

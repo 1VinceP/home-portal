@@ -4,7 +4,7 @@ import ChevronRightIcon from 'vue-material-design-icons/ChevronRight.vue';
 import { Modal } from '@/components';
 import FamilyForm from '@/components/family/FamilyForm.vue';
 import UserLogin from '@/components/family/UserLogin.vue';
-import { Family, NewFamily } from '@/constants/authLevel.constants';
+import { Family, NewFamily, User } from '@/constants/authLevel.constants';
 
 export default {
   data: () => ({
@@ -26,13 +26,18 @@ export default {
     if (this.authLevel === NewFamily) {
       this.changeDisplay( 'firstUser' );
       this.modalOpen = true;
-    } else if (this.authLevel === Family) {
+    } else if (this.authLevel === Family || this.authLevel === User) {
       this.changeDisplay( this.users[0].name );
     }
   },
 
   methods: {
     ...mapMutations( 'users', ['setDisplayedUser'] ),
+
+    resetIsNew() {
+      this.title = '';
+      this.isNew = false;
+    },
 
     changeDisplay( who ) {
       if (who === 'firstUser') {
@@ -75,7 +80,7 @@ export default {
       <div
         :key="user.id"
         v-for="user in users"
-        :class="['user', { selected: user.name === displayedUser.name && !isNew }]"
+        :class="['user', { selected: user.id === displayedUser.id && !isNew }]"
         @click="changeDisplay( user.name )"
       >
         {{ user.name }}
@@ -93,7 +98,7 @@ export default {
 
     <section class="details">
       <UserLogin v-if="showLogin" />
-      <FamilyForm v-else :title="title" :isNew="isNew" />
+      <FamilyForm v-else :title="title" :isNew="isNew" :resetIsNew="resetIsNew" />
     </section>
   </div>
 </template>
