@@ -1,6 +1,10 @@
 <script>
+import Spinner from './BaseSpinner.vue';
+
 export default {
   name: 'base-button',
+
+  components: { Spinner },
 
   props: {
     id: String,
@@ -13,6 +17,7 @@ export default {
     orange: Boolean,
     red: Boolean,
     disabled: Boolean,
+    loading: Boolean,
   },
 };
 </script>
@@ -23,9 +28,10 @@ export default {
     :name="name"
     :class="['button', { primary, full, lg, sm, green, orange, red }]"
     @click="$emit('click', $event.target.name)"
-    :disabled="disabled"
+    :disabled="disabled || loading"
   >
-    <slot />
+    <Spinner v-if="loading" />
+    <slot v-else />
   </button>
 </template>
 

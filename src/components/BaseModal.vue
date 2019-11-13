@@ -10,13 +10,9 @@ export default {
   }),
 
   computed: {
-    classObject() {
-      return {
-        success: this.type === 'success',
-        warning: this.type === 'warning',
-        error: this.type === 'error',
-      };
-    },
+    success() { return this.type === 'success'; },
+    warning() { return this.type === 'warning'; },
+    error() { return this.type === 'error'; },
   },
 
   components: {
@@ -47,8 +43,8 @@ export default {
 <template>
   <div :class="['modal-mask', show ? 'open' : 'closed', { top }]">
 
-    <div :class="['modal', classObject]">
-      <section class="head bar">
+    <div :class="['modal', { success, warning, error }]">
+      <section :class="['head', 'bar', { success, warning, error }]">
         <h1>{{ title }}</h1>
       </section>
 
@@ -71,9 +67,9 @@ export default {
         <Button
           primary
           sm
-          :green="type === 'success'"
-          :orange="type === 'warning'"
-          :red="type === 'error'"
+          :green="success"
+          :orange="warning"
+          :red="error"
           @click="$emit('onPrimary', inputValue)"
         >
           {{ primary }}
@@ -114,8 +110,8 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 3px solid var(--blue);
-  border-radius: 10px;
+  border: 2px solid var(--blue);
+  border-radius: 3px;
   box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.3);
   visibility: inherit;
   &.success {
@@ -128,7 +124,6 @@ export default {
     border-color: var(--red);
   }
   & .bar {
-    height: 60px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -136,21 +131,29 @@ export default {
     padding: 0 16px;
   }
   & .head {
+    height: 40px;
     font-size: 18px;
+    background: var(--blue);
+    color: #efefef;
+    &.success { background: var(--green); }
+    &.warning { background: var(--orange); }
+    &.error { background: var(--red); }
   }
   & .body {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 8px 16px;
+    padding: 28px 16px 8px 16px;
     text-align: left;
     line-height: 124%;
+    font-size: 15px;
     & .prompt {
       margin-top: 16px;
     }
   }
   & .foot {
+    height: 60px;
     justify-content: flex-end;
     & .primary {
       margin-left: 10px;

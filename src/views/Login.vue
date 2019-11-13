@@ -38,6 +38,7 @@ export default {
       const { email, password } = this;
 
       if (this.canCreate) {
+        this.apiError = '';
         this.validating = true;
         this.validationError = false;
 
@@ -50,7 +51,7 @@ export default {
           this.$router.push( '/family' );
         } catch (error) {
           this.validating = false;
-          this.apiError = 'Failed to create family. Please try again';
+          this.apiError = error;
         }
       }
     },
@@ -59,6 +60,7 @@ export default {
       const { email, password } = this;
 
       if (this.canLogin) {
+        this.apiError = '';
         this.validating = true;
         this.validationError = false;
 
@@ -74,7 +76,7 @@ export default {
           this.$router.push( '/family' );
         } catch (error) {
           this.validating = false;
-          this.apiError = 'Username or password is incorrect';
+          this.apiError = error;
         }
       }
     },
@@ -120,7 +122,9 @@ export default {
           type="password"
           @enter="loginFamily"
         />
-        <Button primary full :disabled="!canLogin" @click="loginFamily">Login</Button>
+        <Button primary full :loading="validating" :disabled="!canLogin" @click="loginFamily">
+          Login
+        </Button>
       </div>
       <div v-else class="inputs">
         <Input
@@ -144,7 +148,7 @@ export default {
           type="password"
           @enter="createFamily"
         />
-        <Button primary full :disabled="!canCreate" @click="createFamily">
+        <Button primary full :loading="validating" :disabled="!canCreate" @click="createFamily">
           Create Family Account
         </Button>
       </div>

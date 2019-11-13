@@ -1,7 +1,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import ChevronRightIcon from 'vue-material-design-icons/ChevronRight.vue';
-import { Modal } from '@/components';
+import { Modal, Spinner } from '@/components';
 import FamilyForm from '@/components/family/FamilyForm.vue';
 import UserLogin from '@/components/family/UserLogin.vue';
 import { Family, NewFamily, User } from '@/constants/authLevel.constants';
@@ -15,7 +15,7 @@ export default {
 
   computed: {
     ...mapState( ['authLevel', 'user'] ),
-    ...mapState( 'users', ['users', 'displayedUser', 'newUser'] ),
+    ...mapState( 'users', ['loadingUsers', 'users', 'displayedUser', 'newUser'] ),
 
     showLogin() {
       return this.authLevel === Family;
@@ -58,7 +58,7 @@ export default {
   },
 
   components: {
-    ChevronRightIcon, FamilyForm, UserLogin, Modal,
+    ChevronRightIcon, FamilyForm, UserLogin, Modal, Spinner,
   },
 };
 </script>
@@ -75,6 +75,7 @@ export default {
       Lets start by creating your first family member.
       This person will be an Admin, and will be able to do everything.
     </Modal>
+    <Spinner v-show="loadingUsers" fill />
 
     <section class="family-list">
       <div

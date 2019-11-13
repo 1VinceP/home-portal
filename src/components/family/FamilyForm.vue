@@ -15,8 +15,16 @@ export default {
     ...mapState( ['user', 'authLevel'] ),
     ...mapState( 'users', ['displayedUser', 'newUser', 'userChangesMade'] ),
 
+    userObject() {
+      return this.isNew ? this.newUser : this.displayedUser;
+    },
+
+    isSelf() {
+      return this.user.id === this.userObject.id;
+    },
+
     showAuthToggles() {
-      return (this.user.admin && this.user.id !== this.displayedUser.id)
+      return (this.user.admin && !this.isSelf)
         || this.authLevel === NewFamily || this.isNew;
     },
 
@@ -25,22 +33,22 @@ export default {
     },
 
     showPermissions() {
-      return (this.user.admin && this.user.id !== this.displayedUser.id)
+      return (this.user.admin && !this.isSelf)
         && this.authLevel !== NewFamily;
     },
 
     showDelete() {
-      return this.user.admin && !this.displayedUser.admin && !this.isNew;
+      return this.user.admin && !this.userObject.admin && !this.isNew;
     },
 
     canSave() {
       return this.user.admin || this.isNew
-        || (this.user.manager && !this.displayedUser.manager)
-        || (this.user.id === this.displayedUser.id);
+        || (this.user.manager && !this.userObject.manager)
+        || (this.isSelf);
     },
 
     userValidated() {
-      return !!this.displayedUser.name && !!this.displayedUser.password
+      return !!this.userObject.name && !!this.userObject.password
         && this.userChangesMade;
     },
 
@@ -120,8 +128,9 @@ export default {
 <template>
   <div class="family-form">
     <Modal
+      top
       :show="showDeleteModal"
-      :title="`Delete ${displayedUser.name}?`"
+      :title="`Delete ${userObject.name}?`"
       type="error"
       secondary="Cancel"
       primary="Delete"
@@ -129,18 +138,18 @@ export default {
       @onPrimary="deleteUserMethod"
     >
       This action cannot be undone. <br />
-      Are you sure you want to permanently delete {{ displayedUser.name }}?
+      Are you sure you want to permanently delete {{ userObject.name }}?
     </Modal>
 
     <section class="grid">
-      <div class="title">{{ title || displayedUser.name }}</div>
+      <div class="title">{{ title || userObject.name }}</div>
       <div class="grid-toggle">
         <Toggle
           sm
           v-show="showAuthToggles"
           name="admin"
           label="Admin"
-          :checked="displayedUser.admin || autocheckAuthToggles"
+          :checked="userObject.admin || autocheckAuthToggles"
           @change="edit"
           :disabled="!this.user.admin"
           red
@@ -152,7 +161,7 @@ export default {
           v-show="showAuthToggles"
           name="manager"
           label="Manager"
-          :checked="displayedUser.manager || autocheckAuthToggles"
+          :checked="userObject.manager || autocheckAuthToggles"
           @change="edit"
           :disabled="!this.user.admin"
           red
@@ -162,14 +171,27 @@ export default {
       <div class="grid-image"><div /></div>
 
       <div class="grid-input">
-        <Input name="name" label="Name" :value="displayedUser.name" @input="edit" />
+        <Input
+          name="name"
+          label="Name"
+          :readonly="isSelf
+            ? !user.permissions.ownName
+            : isNew || !user.permissions.otherName
+          "
+          :value="userObject.name"
+          @input="edit"
+        />
       </div>
       <div class="grid-input">
         <Input
           name="password"
           label="Password"
           type="password"
-          :value="displayedUser.password"
+          :readonly="isSelf
+            ? !user.permissions.ownPassword
+            : isNew || !user.permissions.otherPassword
+          "
+          :value="userObject.password"
           @input="edit"
           autocomplete="off"
         />
@@ -179,7 +201,8 @@ export default {
           type="number"
           name="points"
           label="Points"
-          :value="displayedUser.points"
+          :readonly="isSelf ? false : isNew || !user.permissions.otherPoints"
+          :value="userObject.points"
           @input="edit"
         />
       </div>
@@ -201,8 +224,8 @@ export default {
           red
           label="Name"
           name="ownName"
-          :checked="displayedUser.permissions.ownName"
-          :disabled="displayedUser.admin"
+          :checked="userObject.permissions.ownName"
+          :disabled="userObject.admin"
           @change="editPermission"
         />
       </div>
@@ -211,8 +234,8 @@ export default {
           red
           label="Password"
           name="ownPassword"
-          :checked="displayedUser.permissions.ownPassword"
-          :disabled="displayedUser.admin"
+          :checked="userObject.permissions.ownPassword"
+          :disabled="userObject.admin"
           @change="editPermission"
         />
       </div>
@@ -221,8 +244,8 @@ export default {
           red
           label="Image"
           name="ownImage"
-          :checked="displayedUser.permissions.ownImage"
-          :disabled="displayedUser.admin"
+          :checked="userObject.permissions.ownImage"
+          :disabled="userObject.admin"
           @change="editPermission"
         />
       </div>
@@ -231,8 +254,8 @@ export default {
           red
           label="Settings"
           name="ownSettings"
-          :checked="displayedUser.permissions.ownSettings"
-          :disabled="displayedUser.admin"
+          :checked="userObject.permissions.ownSettings"
+          :disabled="userObject.admin"
           @change="editPermission"
         />
       </div>
@@ -250,8 +273,8 @@ export default {
           red
           label="Name"
           name="otherName"
-          :checked="displayedUser.permissions.otherName"
-          :disabled="displayedUser.admin"
+          :checked="userObject.permissions.otherName"
+          :disabled="userObject.admin"
           @change="editPermission"
         />
       </div>
@@ -260,8 +283,8 @@ export default {
           red
           label="Password"
           name="otherPassword"
-          :checked="displayedUser.permissions.otherPassword"
-          :disabled="displayedUser.admin"
+          :checked="userObject.permissions.otherPassword"
+          :disabled="userObject.admin"
           @change="editPermission"
         />
       </div>
@@ -270,8 +293,8 @@ export default {
           red
           label="Points"
           name="otherPoints"
-          :checked="displayedUser.permissions.otherPoints"
-          :disabled="displayedUser.admin"
+          :checked="userObject.permissions.otherPoints"
+          :disabled="userObject.admin"
           @change="editPermission"
         />
       </div>
@@ -280,8 +303,8 @@ export default {
           red
           label="Assign Tasks"
           name="assignTasks"
-          :checked="displayedUser.permissions.assignTask"
-          :disabled="displayedUser.admin"
+          :checked="userObject.permissions.assignTask"
+          :disabled="userObject.admin"
           @change="editPermission"
         />
       </div>
@@ -290,8 +313,8 @@ export default {
           red
           label="Assign Events"
           name="assignEvents"
-          :checked="displayedUser.permissions.assignEvent"
-          :disabled="displayedUser.admin"
+          :checked="userObject.permissions.assignEvent"
+          :disabled="userObject.admin"
           @change="editPermission"
         />
       </div>

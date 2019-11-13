@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+// eslint-disable-next-line import/no-cycle
 import usersModule from './modules/users';
 import tasksModule from './modules/tasks';
 import rewardsModule from './modules/rewards';
@@ -12,8 +13,11 @@ Vue.use( Vuex );
 
 const initialState = () => ({
   authLevel: Anonymous, // anonymous, new family, family, user
-  family: { id: null },
   user: { id: null },
+
+  family: { id: null },
+  loadingFamily: false,
+  loadingFamilyError: '',
 });
 
 export default new Vuex.Store({

@@ -3,41 +3,43 @@ import ky from 'ky';
 import router from '@/router';
 import { User, NewFamily } from '@/constants/authLevel.constants';
 
-const initialState = () => ({
-  loading: false,
-  users: [],
-  displayedUser: {},
-  userChangesMade: false,
-  newUser: {
-    name: '',
-    password: '',
-    image: '',
-    admin: false,
-    manager: false,
-    child: true,
-    tasks: [],
-    rewards: [],
-    events: [],
-    points: 0,
-    permissions: {
-      ownName: false,
-      ownPassword: false,
-      ownImage: false,
-      ownSettings: false,
-      otherName: false,
-      otherPassword: false,
-      otherPoints: false,
-      assignTask: false,
-      assignEvent: false,
-      createTask: false,
-      editTask: false,
-      editEvent: false,
-      editReward: false,
-      createRecipe: false,
-      editRecipe: false,
-    },
-    accountSettings: {},
+const defaultUser = {
+  name: '',
+  password: '',
+  image: '',
+  admin: false,
+  manager: false,
+  child: true,
+  tasks: [],
+  rewards: [],
+  events: [],
+  points: 0,
+  permissions: {
+    ownName: false,
+    ownPassword: false,
+    ownImage: false,
+    ownSettings: false,
+    otherName: false,
+    otherPassword: false,
+    otherPoints: false,
+    assignTask: false,
+    assignEvent: false,
+    createTask: false,
+    editTask: false,
+    editEvent: false,
+    editReward: false,
+    createRecipe: false,
+    editRecipe: false,
   },
+  accountSettings: {},
+};
+
+const initialState = () => ({
+  loadingUsers: false,
+  users: [],
+  displayedUser: { ...defaultUser },
+  userChangesMade: false,
+  newUser: { ...defaultUser },
 });
 
 export default {
@@ -55,6 +57,10 @@ export default {
 
     resetNewUser( state ) {
       state.newUser = initialState().newUser;
+    },
+
+    setLoadingUsers( state, value ) {
+      state.loadingUsers = value;
     },
 
     setUsers( state, users ) {
@@ -101,37 +107,55 @@ export default {
     async createUser( { state, rootState, commit }, oldAuth ) {
       const { newUser: user } = state;
       if (user.admin) commit( 'assignAdminPerms', 'newUser' );
+      commit( 'setLoadingUsers', true );
 
-      const users = await ky.post( '/family/users', { json: { user } } ).json();
-      commit( 'setUsers', users );
-      commit( 'resetNewUser' );
-      if (rootState.authLevel === NewFamily) {
-        commit( 'setAuthLevel', User, { root: true } );
-        commit( 'setUser', users[0], { root: true } );
-      } else {
-        commit( 'setDisplayedUser', users[users.length - 1] );
+      try {
+        const users = await ky.post( '/family/users', { json: { user } } ).json();
+        commit( 'setLoadingUsers', false );
+        commit( 'setUsers', users );
+        commit( 'resetNewUser' );
+        if (rootState.authLevel === NewFamily) {
+          commit( 'setAuthLevel', User, { root: true } );
+          commit( 'setUser', users[0], { root: true } );
+        } else {
+          commit( 'setDisplayedUser', users[users.length - 1] );
+        }
+
+        if (oldAuth === NewFamily) router.push( '/dashboard' );
+      } catch (error) {
+        commit( 'setLoadingUsers', false );
       }
-
-      if (oldAuth === NewFamily) router.push( '/dashboard' );
     },
 
     async updateUser( { state, commit } ) {
       const { displayedUser: user } = state;
+      commit( 'setLoadingUsers', true );
 
-      if (user.admin) commit( 'assignAdminPerms', 'displayedUser' );
+      try {
+        if (user.admin) commit( 'assignAdminPerms', 'displayedUser' );
 
-      const users = await ky.put( '/family/users', { json: { user } } ).json();
-      commit( 'setUsers', users );
-      state.userChangesMade = false;
+        const users = await ky.put( '/family/users', { json: { user } } ).json();
+        commit( 'setLoadingUsers', false );
+        commit( 'setUsers', users );
+        state.userChangesMade = false;
+      } catch (error) {
+        commit( 'setLoadingUsers', false );
+      }
     },
 
     async deleteUser( { state, rootState, commit } ) {
       const { displayedUser: user } = state;
+      commit( 'setLoadingUsers', true );
 
-      const users = await ky.delete( `/family/users/${user.id}` ).json();
+      try {
+        const users = await ky.delete( `/family/users/${user.id}` ).json();
 
-      commit( 'setUsers', users );
-      commit( 'setDisplayedUser', rootState.user );
+        commit( 'setLoadingUsers', false );
+        commit( 'setUsers', users );
+        commit( 'setDisplayedUser', rootState.user );
+      } catch (error) {
+        commit( 'setLoadingUsers', false );
+      }
     },
   },
 };

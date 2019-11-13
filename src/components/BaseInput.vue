@@ -37,19 +37,20 @@ export default {
   components: { Button, EyeIcon, EyeOffIcon },
 
   props: {
-    label: String,
-    value: [String, Number],
-    type: String,
-    name: String,
-    errorMessage: String,
     autocomplete: String,
+    errorMessage: String,
+    label: String,
+    name: String,
     placeholder: String,
+    type: String,
+    value: [String, Number],
     buttonLabel: { type: String, default: 'Search' },
     autofocus: Boolean,
     hasButton: Boolean,
     green: Boolean,
     orange: Boolean,
     red: Boolean,
+    readonly: Boolean,
     isError: Boolean,
     errorOnBlur: { type: Boolean, default: true },
     validation: Function,
@@ -78,6 +79,7 @@ export default {
           green,
           orange,
           red: red || showError,
+          readonly,
         },
       ]"
       @input="$emit('input', $event.target.value, $event.target.name, $event.target.type)"
@@ -87,11 +89,14 @@ export default {
       :placeholder="placeholder"
       :type="(type === 'password' && maskText) && 'password'"
       :autocomplete="autocomplete || (type === 'password' && 'off')"
+      :readonly="readonly"
     />
-    <div v-show="showError || isError" class="errorMessage">{{ errorMessage }}</div>
+    <div v-show="(showError || isError) && !readonly" class="errorMessage">
+      {{ errorMessage }}
+    </div>
 
     <span v-show="hasButton || type === 'password'" class="accessories">
-      <Button v-show="hasButton" @click="$emit('click', value)">
+      <Button v-show="hasButton && !readonly" @click="$emit('click', value)">
         {{ buttonLabel }}
       </Button>
       <span v-show="type === 'password'" class="icons" @click="changeMask">
@@ -153,7 +158,17 @@ export default {
     &.green:focus { border: 2px solid var(--green); }
     &.orange:focus { border: 2px solid var(--orange); }
     &.red:focus { border: 2px solid var(--red); }
+    &.readonly {
+      border: none !important;
+      cursor: default;
+    }
   }
+  // & .readonly {
+  //   height: 40px;
+  //   width: 500px;
+  //   display: flex;
+  //   align-items: center;
+  // }
   & .accessories {
     height: 100%;
     display: flex;
@@ -169,7 +184,6 @@ export default {
     }
   }
   & .errorMessage {
-    // height: 14px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
