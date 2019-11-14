@@ -7,13 +7,14 @@ import tasksModule from './modules/tasks';
 import rewardsModule from './modules/rewards';
 import calendarModule from './modules/calendar';
 
+import defaultUser from '@/constants/defaultUser';
 import { Anonymous, Family, User } from '@/constants/authLevel.constants';
 
 Vue.use( Vuex );
 
 const initialState = () => ({
   authLevel: Anonymous, // anonymous, new family, family, user
-  user: { id: null },
+  user: { ...defaultUser },
 
   family: { id: null },
   loadingFamily: false,

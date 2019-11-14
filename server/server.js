@@ -11,6 +11,7 @@ const authValidation = require( './middleware/authValidation' );
 
 const authController = require( './controllers/authController' );
 const userController = require( './controllers/userController' );
+const taskController = require( './controllers/taskController' );
 
 let app = express();
 
@@ -49,6 +50,9 @@ app.post( '/auth/family/login', authController.loginFamily );
 app.post( '/family/users', authValidation, userController.createUser );
 app.put( '/family/users', authValidation, userController.updateUser );
 app.delete( '/family/users/:id', authValidation, userController.deleteUser );
+
+// Tasks
+app.get( '/family/tasks', authValidation, taskController.getTasks );
 
 
 

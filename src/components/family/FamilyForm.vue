@@ -4,6 +4,7 @@ import {
   Button, Collapsible, Input, Toggle, Modal,
 } from '@/components';
 import { NewFamily } from '@/constants/authLevel.constants';
+import checkPermission from '@/utils/checkPermission';
 
 export default {
   name: 'family-form',
@@ -23,18 +24,18 @@ export default {
       return this.user.id === this.userObject.id;
     },
 
-    showAuthToggles() {
-      return (this.user.admin && !this.isSelf)
-        || this.authLevel === NewFamily || this.isNew;
+    isNewFamily() {
+      return this.authLevel === NewFamily;
     },
 
-    autocheckAuthToggles() {
-      return this.authLevel === NewFamily;
+    showAuthToggles() {
+      return (this.user.admin && !this.isSelf)
+        || this.isNewFamily || this.isNew;
     },
 
     showPermissions() {
       return (this.user.admin && !this.isSelf)
-        && this.authLevel !== NewFamily;
+        && !this.isNewFamily;
     },
 
     showDelete() {
@@ -65,7 +66,7 @@ export default {
   },
 
   mounted() {
-    if (this.authLevel === NewFamily) {
+    if (this.isNewFamily) {
       this.editNewUser({ prop: 'admin', value: true });
       this.editNewUser({ prop: 'manager', value: true });
     }
@@ -111,6 +112,10 @@ export default {
       this.deleteUser();
       this.showDeleteModal = false;
     },
+
+    permissionCheck( permission ) {
+      return checkPermission( this.isSelf, permission );
+    },
   },
 
   components: {
@@ -149,7 +154,7 @@ export default {
           v-show="showAuthToggles"
           name="admin"
           label="Admin"
-          :checked="userObject.admin || autocheckAuthToggles"
+          :checked="userObject.admin || isNewFamily"
           @change="edit"
           :disabled="!this.user.admin"
           red
@@ -161,7 +166,7 @@ export default {
           v-show="showAuthToggles"
           name="manager"
           label="Manager"
-          :checked="userObject.manager || autocheckAuthToggles"
+          :checked="userObject.manager || isNewFamily"
           @change="edit"
           :disabled="!this.user.admin"
           red
@@ -174,10 +179,7 @@ export default {
         <Input
           name="name"
           label="Name"
-          :readonly="isSelf
-            ? !user.permissions.ownName
-            : isNew || !user.permissions.otherName
-          "
+          :readonly="!isNew && permissionCheck( 'Name' )"
           :value="userObject.name"
           @input="edit"
         />
@@ -187,10 +189,7 @@ export default {
           name="password"
           label="Password"
           type="password"
-          :readonly="isSelf
-            ? !user.permissions.ownPassword
-            : isNew || !user.permissions.otherPassword
-          "
+          :readonly="!isNew && permissionCheck( 'Password' )"
           :value="userObject.password"
           @input="edit"
           autocomplete="off"
@@ -201,7 +200,7 @@ export default {
           type="number"
           name="points"
           label="Points"
-          :readonly="isSelf ? false : isNew || !user.permissions.otherPoints"
+          :readonly="!isNew && permissionCheck( 'Points' )"
           :value="userObject.points"
           @input="edit"
         />
@@ -302,7 +301,7 @@ export default {
         <Toggle
           red
           label="Assign Tasks"
-          name="assignTasks"
+          name="assignTask"
           :checked="userObject.permissions.assignTask"
           :disabled="userObject.admin"
           @change="editPermission"
@@ -312,7 +311,7 @@ export default {
         <Toggle
           red
           label="Assign Events"
-          name="assignEvents"
+          name="assignEvent"
           :checked="userObject.permissions.assignEvent"
           :disabled="userObject.admin"
           @change="editPermission"
@@ -327,12 +326,66 @@ export default {
       :cols="3"
       red
     >
-      <div class="grid-toggle"><Toggle red label="Create Task" /></div>
-      <div class="grid-toggle"><Toggle red label="Edit Task" /></div>
-      <div class="grid-toggle"><Toggle red label="Edit Event" /></div>
-      <div class="grid-toggle"><Toggle red label="Edit Reward" /></div>
-      <div class="grid-toggle"><Toggle red label="Create Recipe" /></div>
-      <div class="grid-toggle"><Toggle red label="Edit Recipe" /></div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Create Task"
+          name="createTask"
+          :checked="userObject.permissions.createTask"
+          :disabled="userObject.admin"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Edit Task"
+          name="editTask"
+          :checked="userObject.permissions.editTask"
+          :disabled="userObject.admin"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Edit Event"
+          name="editEvent"
+          :checked="userObject.permissions.editEvent"
+          :disabled="userObject.admin"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Edit Reward"
+          name="editReward"
+          :checked="userObject.permissions.editReward"
+          :disabled="userObject.admin"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Create Recipe"
+          name="createRecipe"
+          :checked="userObject.permissions.createRecipe"
+          :disabled="userObject.admin"
+          @change="editPermission"
+        />
+      </div>
+      <div class="grid-toggle">
+        <Toggle
+          red
+          label="Edit Recipe"
+          name="editRecipe"
+          :checked="userObject.permissions.editRecipe"
+          :disabled="userObject.admin"
+          @change="editPermission"
+        />
+      </div>
     </Collapsible>
 
     <section v-show="canSave" class="footer">

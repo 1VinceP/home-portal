@@ -2,44 +2,14 @@ import ky from 'ky';
 // eslint-disable-next-line import/no-cycle
 import router from '@/router';
 import { User, NewFamily } from '@/constants/authLevel.constants';
-
-const defaultUser = {
-  name: '',
-  password: '',
-  image: '',
-  admin: false,
-  manager: false,
-  child: true,
-  tasks: [],
-  rewards: [],
-  events: [],
-  points: 0,
-  permissions: {
-    ownName: false,
-    ownPassword: false,
-    ownImage: false,
-    ownSettings: false,
-    otherName: false,
-    otherPassword: false,
-    otherPoints: false,
-    assignTask: false,
-    assignEvent: false,
-    createTask: false,
-    editTask: false,
-    editEvent: false,
-    editReward: false,
-    createRecipe: false,
-    editRecipe: false,
-  },
-  accountSettings: {},
-};
+import defaultUser from '@/constants/defaultUser';
 
 const initialState = () => ({
   loadingUsers: false,
   users: [],
-  displayedUser: { ...defaultUser },
+  displayedUser: { ...defaultUser() },
   userChangesMade: false,
-  newUser: { ...defaultUser },
+  newUser: { ...defaultUser() },
 });
 
 export default {
@@ -56,7 +26,7 @@ export default {
     },
 
     resetNewUser( state ) {
-      state.newUser = initialState().newUser;
+      state.newUser = { ...defaultUser() };
     },
 
     setLoadingUsers( state, value ) {
@@ -96,9 +66,17 @@ export default {
 
     assignAdminPerms( state, userType ) {
       console.log('assigning admin');
-      const permissions = initialState().newUser.permissions;
+      const permissions = { ...defaultUser().permissions };
       Object.keys( permissions ).forEach(key => {
         state[userType].permissions[key] = true;
+      });
+    },
+
+    removePerms( state, userType ) {
+      console.log('removing perms');
+      const permissions = { ...defaultUser().permissions };
+      Object.keys( permissions ).forEach(key => {
+        state[userType].permissions[key] = false;
       });
     },
   },

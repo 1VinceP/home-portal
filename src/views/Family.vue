@@ -1,6 +1,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import ChevronRightIcon from 'vue-material-design-icons/ChevronRight.vue';
+import CrownIcon from 'vue-material-design-icons/Crown.vue';
 import { Modal, Spinner } from '@/components';
 import FamilyForm from '@/components/family/FamilyForm.vue';
 import UserLogin from '@/components/family/UserLogin.vue';
@@ -58,7 +59,12 @@ export default {
   },
 
   components: {
-    ChevronRightIcon, FamilyForm, UserLogin, Modal, Spinner,
+    ChevronRightIcon,
+    CrownIcon,
+    FamilyForm,
+    UserLogin,
+    Modal,
+    Spinner,
   },
 };
 </script>
@@ -84,7 +90,21 @@ export default {
         :class="['user', { selected: user.id === displayedUser.id && !isNew }]"
         @click="changeDisplay( user.name )"
       >
-        {{ user.name }}
+        <span class="name">
+          <span
+            v-show="user.admin || user.manager"
+            :class="[
+              'crown',
+              {
+                manager: user.manager && !user.admin,
+                admin: user.admin,
+              },
+            ]"
+          >
+            <CrownIcon />
+          </span>
+          {{ user.name }}
+        </span>
         <ChevronRightIcon class="arrow-right" />
       </div>
       <div
@@ -134,6 +154,15 @@ export default {
       color: var(--orange);
       &:hover, &.selected {
         background: #fff2a766;
+      }
+    }
+    & .name {
+      display: flex;
+      align-items: center;
+      & .crown {
+        margin-right: 10px;
+        &.manager { color: var(--orange); }
+        &.admin { color: var(--red); }
       }
     }
   }

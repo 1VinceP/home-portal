@@ -1,3 +1,5 @@
+import ky from 'ky';
+
 const initialState = {
   loading: false,
   tasks: [{
@@ -23,5 +25,14 @@ export default {
     },
   },
 
-  actions: {},
+  actions: {
+    async getTasks({ commit }) {
+      try {
+        const tasks = await ky.get( '/family/tasks' ).json();
+        commit( 'setTasks', tasks );
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
 };

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+// eslint-disable-next-line import/no-cycle
 import store from '@/store';
 
 import Home from '@/views/Home.vue';
@@ -61,6 +62,11 @@ const routes = [
   {
     path: '/rewards',
     name: 'rewards',
+    meta: { protection: 'full' },
+  },
+  {
+    path: '/settings',
+    name: 'settings',
     meta: { protection: 'full' },
   },
 ];

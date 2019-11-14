@@ -17,6 +17,7 @@
     - [x] Login page styles
 -->
 
+<!--
 - [x] (1.2) `Login to an existing account`
   - [x] Account has no users
     - [x] New user flow (see "(1.1) Create a new family account")
@@ -27,9 +28,10 @@
     - [x] Redirect to Family page
       - [x] Select user and login
       - [x] Redirect to Dashboard
+-->
 
 - [ ] (1.3) `Family detail page`
-  - [ ] Display/edit current user data
+  - [x] Display/edit current user data
     - [ ] Child user can maybe edit self
     - [ ] Delete user
   - [x] Create User
