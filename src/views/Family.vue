@@ -81,7 +81,7 @@ export default {
       Lets start by creating your first family member.
       This person will be an Admin, and will be able to do everything.
     </Modal>
-    <Spinner v-show="loadingUsers" fill />
+    <Spinner v-show="loadingUsers" full />
 
     <section class="family-list">
       <div
@@ -92,10 +92,10 @@ export default {
       >
         <span class="name">
           <span
-            v-show="user.admin || user.manager"
             :class="[
               'crown',
               {
+                child: !user.manager,
                 manager: user.manager && !user.admin,
                 admin: user.admin,
               },
@@ -161,6 +161,7 @@ export default {
       align-items: center;
       & .crown {
         margin-right: 10px;
+        &.child { color: transparent; }
         &.manager { color: var(--orange); }
         &.admin { color: var(--red); }
       }
