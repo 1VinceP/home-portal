@@ -3,10 +3,13 @@ import VueRouter from 'vue-router';
 // eslint-disable-next-line import/no-cycle
 import store from '@/store';
 
+import EmptyRouterView from '@/components/EmptyRouterView.vue';
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
 import Dashboard from '@/views/Dashboard.vue';
 import Family from '@/views/Family.vue';
+import Tasks from '@/views/Tasks.vue';
+import TaskForm from '@/views/TaskForm.vue';
 
 import * as AuthLevel from '@/constants/authLevel.constants';
 
@@ -56,8 +59,27 @@ const routes = [
   },
   {
     path: '/tasks',
-    name: 'tasks',
-    meta: { protection: 'full' },
+    component: EmptyRouterView,
+    children: [
+      {
+        path: '',
+        name: 'tasks',
+        component: Tasks,
+        meta: { protection: 'full' },
+      },
+      {
+        path: 'create',
+        name: 'create task',
+        component: TaskForm,
+        meta: { protection: 'full' },
+      },
+      {
+        path: ':taskId',
+        name: 'task',
+        component: TaskForm,
+        meta: { protection: 'full' },
+      },
+    ],
   },
   {
     path: '/rewards',

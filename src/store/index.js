@@ -50,7 +50,7 @@ export default new Vuex.Store({
       state.family = rest;
       commit( 'calendar/setCalendar', calendar, { root: true } );
       commit( 'rewards/setRewards', rewards, { root: true } );
-      commit( 'tasks/setTasks', tasks, { root: true } );
+      // commit( 'tasks/setTasks', tasks, { root: true } );
       commit( 'users/setUsers', users, { root: true } );
     },
 

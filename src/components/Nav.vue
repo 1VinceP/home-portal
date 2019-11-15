@@ -14,9 +14,8 @@ export default {
   computed: {
     ...mapState(['authLevel']),
 
-    disabled() {
-      return this.authLevel !== User;
-    },
+    path() { return this.$route.path; },
+    disabled() { return this.authLevel !== User; },
   },
 
   methods: {
@@ -38,38 +37,38 @@ export default {
     <router-link
       to="/dashboard"
       :event="disabled ? '' : 'click'"
-      :class="['icon-container', { disabled }]"
+      :class="['icon-container', { disabled, atLink: path.includes('dashboard') }]"
     >
       <HouseIcon :size="34" />
     </router-link>
-    <router-link to="/family" class="icon-container">
+    <router-link to="/family" :class="['icon-container', { atLink: path.includes('family') }]">
       <AccountGroup :size="34" />
     </router-link>
     <router-link
       to="/calendar"
       :event="disabled ? '' : 'click'"
-      :class="['icon-container', { disabled }]"
+      :class="['icon-container', { disabled, atLink: path.includes('calendar') }]"
     >
       <CalendarIcon :size="34" />
     </router-link>
     <router-link
       to="/tasks"
       :event="disabled ? '' : 'click'"
-      :class="['icon-container', { disabled }]"
+      :class="['icon-container', { disabled, atLink: path.includes('tasks') }]"
     >
       <ListIcon :size="34" />
     </router-link>
     <router-link
       to="/rewards"
       :event="disabled ? '' : 'click'"
-      :class="['icon-container', { disabled }]"
+      :class="['icon-container', { disabled, atLink: path.includes('rewards') }]"
     >
       <RewardIcon :size="34" />
     </router-link>
     <router-link
       to="/settings"
       :event="disabled ? '' : 'click'"
-      :class="['icon-container', { disabled }]"
+      :class="['icon-container', { disabled, atLink: path.includes('settings') }]"
     >
       <SettingsIcon :size="34" />
     </router-link>
@@ -90,11 +89,6 @@ export default {
   & a {
     color: var(--navy);
   }
-  & a.router-link-exact-active {
-    &.icon-container {
-      color: var(--blue);
-    }
-  }
   & .icon-container {
     height: 40px;
     width: 40px;
@@ -104,6 +98,7 @@ export default {
     margin-bottom: 26px;
     color: var(--navy);
     cursor: pointer;
+    &.atLink { color: var(--blue); }
     &.disabled {
       color: #aaa;
       cursor: default;

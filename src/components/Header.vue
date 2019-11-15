@@ -67,7 +67,7 @@ header {
   align-items: center;
   & .user {
     height: 100%;
-    background: var(--green);
+    background: var(--blue);
     display: flex;
     justify-content: center;
     align-items: center;

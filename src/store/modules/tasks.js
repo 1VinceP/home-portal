@@ -1,11 +1,15 @@
 import ky from 'ky';
 
-const initialState = {
+const initialState = () => ({
   loading: false,
-  tasks: [{
-    id: null, name: '',
-  }],
-};
+  tasks: [
+    { id: 1, name: 'Dishes', reward: 200 },
+    { id: 2, name: 'Feed animals', reward: 200 },
+    { id: 3, name: 'Clear table', reward: 200 },
+    { id: 4, name: 'Clean toilet', reward: 200 },
+    { id: 5, name: 'Mow lawn', reward: 200 },
+  ],
+});
 
 export default {
   namespaced: true,

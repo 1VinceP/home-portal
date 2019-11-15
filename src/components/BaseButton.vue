@@ -75,7 +75,7 @@ export default {
   &.green {
     background: var(--green);
     color: #fff;
-    &:hover { background: #17ae67; }
+    &:hover { background: lighten(#17AE82, 2%); }
     &:active { background: var(--green); }
     &[disabled] {
       background: var(--grey);

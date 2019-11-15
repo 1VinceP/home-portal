@@ -38,6 +38,7 @@ export default {
   --navSize: 70px;
   // colors
   --green: #17AE82;
+  --eventGreen: #0B503C;
   --orange: #ff7d00;
   --orange-faded: rgba(255, 242, 167, 0.4);
   --red: #C42338;

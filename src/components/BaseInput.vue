@@ -46,6 +46,7 @@ export default {
     value: [String, Number],
     buttonLabel: { type: String, default: 'Search' },
     autofocus: Boolean,
+    textarea: Boolean,
     hasButton: Boolean,
     green: Boolean,
     orange: Boolean,
@@ -66,7 +67,28 @@ export default {
     ]"
   >
     <div v-show="label" class="label">{{ label }}</div>
-    <input
+
+    <textarea v-if="textarea"
+      :name="name"
+      :class="[
+        'textarea',
+        {
+          hasLabel: !!label,
+          hasError: showError || isError,
+          green,
+          orange,
+          red: red || showError,
+          readonly,
+        },
+      ]"
+      @input="$emit('input', $event.target.value, $event.target.name, $event.target.type)"
+      @keyup.enter="$emit('enter', $event.target.value, $event.target.name)"
+      @blur="onBlur"
+      :value="value"
+      :placeholder="placeholder"
+      :readonly="readonly"
+    />
+    <input v-else
       ref="input"
       :name="name"
       :class="[
@@ -91,6 +113,7 @@ export default {
       :autocomplete="autocomplete || (type === 'password' && 'off')"
       :readonly="readonly"
     />
+
     <div v-show="(showError || isError) && !readonly" class="errorMessage">
       {{ errorMessage }}
     </div>
@@ -136,25 +159,39 @@ export default {
     padding: 0 16px;
     font-size: 16px;
     outline: none;
-    &:focus {
-      border: 2px solid var(--blue);
-    }
-    &.hasButton {
-      padding-right: 80px;
-    }
-    &.hasIcons {
-      padding-right: 100px;
-    }
-    &.hasLabel {
-      border-top-left-radius: 0;
-    }
+    &:focus { border: 2px solid var(--blue); }
+    &.hasButton { padding-right: 80px; }
+    &.hasIcons { padding-right: 100px; }
+    &.hasLabel { border-top-left-radius: 0; }
     &.hasError {
       border: 1px solid var(--red);
       border-bottom-right-radius: 0;
     }
-    &.hasLabel.hasError {
-      border-radius: 0 20px;
+    &.hasLabel.hasError { border-radius: 0 20px; }
+    &.green:focus { border: 2px solid var(--green); }
+    &.orange:focus { border: 2px solid var(--orange); }
+    &.red:focus { border: 2px solid var(--red); }
+    &.readonly {
+      border: none !important;
+      cursor: default;
     }
+  }
+  & .textarea {
+    height: 80px;
+    width: 500px;
+    max-width: 100%;
+    border: 1px solid var(--grey);
+    border-radius: 20px;
+    padding: 4px 8px;
+    font-size: 16px;
+    outline: none;
+    &:focus { border: 2px solid var(--blue); }
+    &.hasLabel { border-top-left-radius: 0; }
+    &.hasError {
+      border: 1px solid var(--red);
+      border-bottom-right-radius: 0;
+    }
+    &.hasLabel.hasError { border-radius: 0 20px; }
     &.green:focus { border: 2px solid var(--green); }
     &.orange:focus { border: 2px solid var(--orange); }
     &.red:focus { border: 2px solid var(--red); }

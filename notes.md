@@ -145,6 +145,7 @@
     canEditChild: Array, // list of child user properties this user can edit
   },
   accountSettings: Object,
+  tasks: Array, // list of assigned task ids
   meta: {
     createdOn: Date,
     createdBy: String, // relates to userId
