@@ -14,6 +14,7 @@ module.exports = {
     'arrow-parens': 'off',
     'linebreak-style': 'off',
     'prefer-destructuring': 'off',
+    'no-else-return': 'off',
   },
   parserOptions: {
     parser: 'babel-eslint',

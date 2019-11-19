@@ -1,15 +1,11 @@
 import ky from 'ky';
+// eslint-disable-next-line import/no-cycle
+import router from '@/router';
 import defaultTask from '@/constants/defaultTask';
 
 const initialState = () => ({
-  loading: false,
-  tasks: [
-    { id: 1, name: 'Dishes', reward: 200 },
-    { id: 2, name: 'Feed animals', reward: 200 },
-    { id: 3, name: 'Clear table', reward: 200 },
-    { id: 4, name: 'Clean toilet', reward: 200 },
-    { id: 5, name: 'Mow lawn', reward: 200 },
-  ],
+  loadingTasks: false,
+  tasks: [],
   displayTask: defaultTask(),
 });
 
@@ -30,6 +26,10 @@ export default {
       state.displayTask = defaultTask();
     },
 
+    setLoadingTasks( state, value ) {
+      state.loadingTasks = value;
+    },
+
     setTasks( state, tasks ) {
       state.tasks = tasks;
     },
@@ -43,6 +43,10 @@ export default {
         state.displayTask = taskToSet;
       }
     },
+
+    editTask( state, { prop, value } ) {
+      state.displayTask[prop] = value;
+    },
   },
 
   actions: {
@@ -52,6 +56,20 @@ export default {
         commit( 'setTasks', tasks );
       } catch (error) {
         console.log(error);
+      }
+    },
+
+    async updateTask({ state, commit }) {
+      const { displayTask: task } = state;
+      commit( 'setLoadingTasks', true );
+
+      try {
+        const tasks = await ky.put( '/family/tasks', { json: { task } } ).json();
+        commit( 'setLoadingTasks', false );
+        commit( 'setTasks', tasks );
+        router.push( '/tasks' );
+      } catch (error) {
+        commit( 'setLoadingTasks', false );
       }
     },
   },

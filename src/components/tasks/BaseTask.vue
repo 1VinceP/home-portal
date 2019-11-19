@@ -75,7 +75,8 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border: 5px solid var(--eventGreen);
+    border: 3px solid var(--eventGreen);
+    border-radius: 3px;
     &:hover {
       border-color: lighten(#0B503C, 5%);
       & .header { background: lighten(#0B503C, 5%); }

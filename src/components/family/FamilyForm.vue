@@ -389,7 +389,9 @@ export default {
     </Collapsible>
 
     <section v-show="canSave" class="footer">
-      <Button v-show="showDelete" red class="delete" @click="showDeleteModal = true">Delete</Button>
+      <Button v-show="showDelete" isDelete class="delete" @click="showDeleteModal = true">
+        Delete
+      </Button>
       <Button primary @click="saveUser" :disabled="saveButtonSpecs.disabled">
         {{ saveButtonSpecs.label }}
       </Button>

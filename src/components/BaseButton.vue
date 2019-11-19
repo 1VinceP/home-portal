@@ -16,6 +16,7 @@ export default {
     green: Boolean,
     orange: Boolean,
     red: Boolean,
+    isDelete: Boolean,
     disabled: Boolean,
     loading: Boolean,
   },
@@ -26,7 +27,7 @@ export default {
   <button
     :id="id"
     :name="name"
-    :class="['button', { primary, full, lg, sm, green, orange, red }]"
+    :class="['button', { primary, full, lg, sm, green, orange, red, isDelete }]"
     @click="$emit('click', $event.target.name)"
     :disabled="disabled || loading"
   >
@@ -101,6 +102,10 @@ export default {
       background: var(--grey);
       color: #fff;
     }
+  }
+  &.isDelete {
+    color: var(--red);
+    font-size: 17px;
   }
   &[disabled] {
     color: var(--grey);

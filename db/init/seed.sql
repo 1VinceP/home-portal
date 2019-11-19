@@ -44,8 +44,12 @@ CREATE TABLE Tasks (
   , "name"        TEXT
   , "image"       TEXT
   , "description" TEXT
-  , reward        SMALLINT
 );
+INSERT INTO Tasks ( "name", "description" ) VALUES ( 'Dishes', '' );
+INSERT INTO Tasks ( "name", "description" ) VALUES ( 'Feed animals', '' );
+INSERT INTO Tasks ( "name", "description" ) VALUES ( 'Clear table', '' );
+INSERT INTO Tasks ( "name", "description" ) VALUES ( 'Clean toilet', '' );
+INSERT INTO Tasks ( "name", "description" ) VALUES ( 'Mow lawn', '' );
 
 CREATE TABLE Family_tasks (
     id SERIAL  PRIMARY KEY
@@ -56,6 +60,11 @@ CREATE TABLE Family_tasks (
   , duration   TIME
   , reward     SMALLINT
 );
+INSERT INTO Family_tasks ( family_id, task_id, reward ) VALUES ( 1, 1, 200 );
+INSERT INTO Family_tasks ( family_id, task_id, reward ) VALUES ( 1, 2, 100 );
+INSERT INTO Family_tasks ( family_id, task_id, reward ) VALUES ( 1, 3, 150 );
+INSERT INTO Family_tasks ( family_id, task_id, reward ) VALUES ( 1, 4, 200 );
+INSERT INTO Family_tasks ( family_id, task_id, reward ) VALUES ( 1, 5, 300 );
 
 CREATE TABLE Family_rewards (
     id SERIAL PRIMARY KEY

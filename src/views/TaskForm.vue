@@ -1,18 +1,14 @@
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import { Button, Input } from '@/components';
 
 export default {
   name: 'task-form',
-  data: () => ({
-    name: '',
-    description: '',
-    repeats: false,
-  }),
 
   computed: {
+    ...mapState( ['user'] ),
     ...mapState( 'tasks', ['displayTask'] ),
-    editTask() { return this.user.permissions.editTask; },
+    canEditTask() { return this.user.permissions.editTask; },
   },
 
   beforeMount() {
@@ -22,7 +18,14 @@ export default {
   },
 
   methods: {
-    ...mapMutations( 'tasks', ['setTask'] ),
+    ...mapMutations( 'tasks', ['setTask', 'editTask'] ),
+    ...mapActions( 'tasks', ['updateTask'] ),
+
+    edit( value, prop, type ) {
+      let v = value;
+      if (type === 'number') v = Number(v);
+      this.editTask({ prop, value: v });
+    },
   },
 
   components: { Button, Input },
@@ -31,35 +34,60 @@ export default {
 
 <template>
   <div class="task-form">
-    <Input
-      v-model="name"
-      label="Name"
-    />
-    <Input
-      textarea
-      v-model="description"
-      label="Description"
-    />
+    <div class="form">
+      <Input
+        label="Name"
+        name="name"
+        :value="displayTask.name"
+        :validation="value => !!value"
+        @input="edit"
+      />
+      <Input
+        textarea
+        label="Description"
+        name="description"
+        :value="displayTask.description"
+        :validation="value => !!value"
+        @input="edit"
+      />
+      <Input
+        label="Reward"
+        type="number"
+        name="reward"
+        :value="displayTask.reward"
+        :validation="value => !!value"
+        @input="edit"
+      />
 
-    <div class="buttons">
-      <Button red>Delete</Button>
-      <Button primary>Save</Button>
+      <div class="buttons">
+        <Button isDelete class="delete">Delete</Button>
+        <Button primary @click="updateTask">Save</Button>
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .task-form {
-  height: 100%;
+  min-height: calc(100% - var(--header-height));
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 16px;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .buttons {
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  & .delete { margin-right: 30px; }
 }
 </style>

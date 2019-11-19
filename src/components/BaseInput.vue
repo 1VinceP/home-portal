@@ -10,6 +10,15 @@ export default {
     maskText: false,
   }),
 
+  computed: {
+    computedType() {
+      if (this.type === 'password' && this.maskText) return 'password';
+      else if (this.type === 'password' && !this.maskText) return 'input';
+
+      return this.type;
+    },
+  },
+
   mounted() {
     if (this.type === 'password') this.maskText = true;
     if (this.autofocus) {
@@ -109,7 +118,7 @@ export default {
       @blur="onBlur"
       :value="value"
       :placeholder="placeholder"
-      :type="(type === 'password' && maskText) && 'password'"
+      :type="computedType"
       :autocomplete="autocomplete || (type === 'password' && 'off')"
       :readonly="readonly"
     />

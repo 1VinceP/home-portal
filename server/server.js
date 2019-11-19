@@ -53,6 +53,7 @@ app.delete( '/family/users/:id', authValidation, userController.deleteUser );
 
 // Tasks
 app.get( '/family/tasks', authValidation, taskController.getTasks );
+app.put( '/family/tasks', authValidation, taskController.updateTask );
 
 
 
