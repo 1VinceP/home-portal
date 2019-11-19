@@ -200,12 +200,6 @@ export default {
       cursor: default;
     }
   }
-  // & .readonly {
-  //   height: 40px;
-  //   width: 500px;
-  //   display: flex;
-  //   align-items: center;
-  // }
   & .accessories {
     height: 100%;
     display: flex;

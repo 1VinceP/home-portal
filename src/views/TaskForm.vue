@@ -1,4 +1,5 @@
 <script>
+import { mapMutations, mapState } from 'vuex';
 import { Button, Input } from '@/components';
 
 export default {
@@ -10,11 +11,18 @@ export default {
   }),
 
   computed: {
+    ...mapState( 'tasks', ['displayTask'] ),
     editTask() { return this.user.permissions.editTask; },
-    // bg() {
-    //   const { taskId } = this.$route.params;
-    //   return { background: taskId ? '#0f0' : '#f0f' };
-    // },
+  },
+
+  beforeMount() {
+    const taskId = Number(this.$route.params.taskId);
+    if (taskId >= 0) this.setTask({ taskId });
+    else this.setTask({ newTask: true });
+  },
+
+  methods: {
+    ...mapMutations( 'tasks', ['setTask'] ),
   },
 
   components: { Button, Input },
